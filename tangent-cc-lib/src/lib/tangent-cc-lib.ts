@@ -1,3 +1,2 @@
-export function tangentCcLib(): string {
-  return 'tangent-cc-lib';
-}
+export * from './data/index.js';
+export * from './model/index.js';
