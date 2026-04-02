@@ -1,0 +1,53 @@
+{
+  "name": "@tangent-cc-lib/source",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "build": "nx build tangent-cc-lib",
+    "test": "nx test tangent-cc-lib",
+    "lint": "nx lint tangent-cc-lib",
+    "build-and-publish": "npm run build && cd tangent-cc-lib/dist && npm publish --access public"
+  },
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "@eslint/js": "^9.8.0",
+    "@nx/eslint": "22.6.4",
+    "@nx/eslint-plugin": "22.6.4",
+    "@nx/js": "22.6.4",
+    "@nx/vitest": "22.6.4",
+    "@swc-node/register": "~1.11.1",
+    "@swc/core": "~1.15.5",
+    "@swc/helpers": "~0.5.18",
+    "@types/node": "20.19.9",
+    "@vitest/coverage-v8": "~4.1.0",
+    "eslint": "^9.8.0",
+    "eslint-config-prettier": "^10.0.0",
+    "jsonc-eslint-parser": "^2.1.0",
+    "nx": "22.6.4",
+    "prettier": "~3.6.2",
+    "tslib": "^2.3.0",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.40.0",
+    "verdaccio": "^6.3.2",
+    "vite": "^8.0.0",
+    "vitest": "~4.1.0"
+  },
+  "workspaces": [
+    "packages/*",
+    "tangent-cc-lib"
+  ],
+  "nx": {
+    "includedScripts": [],
+    "targets": {
+      "local-registry": {
+        "executor": "@nx/js:verdaccio",
+        "options": {
+          "port": 4873,
+          "config": ".verdaccio/config.yml",
+          "storage": "tmp/local-registry/storage"
+        }
+      }
+    }
+  }
+}
