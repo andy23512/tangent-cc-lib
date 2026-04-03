@@ -1,6 +1,6 @@
-import { KeyBoardLayout } from '../../model/keyboard-layout.models.js';
+import { KeyboardLayout } from '../../model/keyboard-layout.models.js';
 
-export const CHINESE_KEYBOARD_LAYOUTS: KeyBoardLayout[] = [
+export const CHINESE_KEYBOARD_LAYOUTS: KeyboardLayout[] = [
   {
     id: 'cangjie',
     name: '倉頡 (Cangjie)',

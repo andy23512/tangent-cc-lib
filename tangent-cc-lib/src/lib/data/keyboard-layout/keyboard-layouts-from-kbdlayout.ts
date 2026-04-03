@@ -1,6 +1,6 @@
-import { KeyBoardLayout } from '../../model/keyboard-layout.models.js';
+import { KeyboardLayout } from '../../model/keyboard-layout.models.js';
 
-export const KEYBOARD_LAYOUTS_FROM_KBDLAYOUT: KeyBoardLayout[] = [
+export const KEYBOARD_LAYOUTS_FROM_KBDLAYOUT: KeyboardLayout[] = [
   {
     id: 'adlam',
     name: 'ADLaM',

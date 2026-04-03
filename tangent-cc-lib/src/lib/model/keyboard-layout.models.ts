@@ -17,7 +17,7 @@ export type KeyboardLayoutKey = Record<
 /**
  * Data of a keyboard layout (OS layout), which map key codes to keyboard layout keys
  */
-export interface KeyBoardLayout {
+export interface KeyboardLayout {
   id: string;
   name: string;
   reference: string;
