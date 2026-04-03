@@ -59,7 +59,7 @@ export type NonKeyActionName =
 export interface WSKAction extends BaseAction {
   type: ActionType.WSK;
   keyCode: WSKCode;
-  withShift?: boolean;
+  withShift: boolean;
 }
 
 export interface NonWSKAction extends BaseAction {
