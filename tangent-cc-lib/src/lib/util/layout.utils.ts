@@ -1,5 +1,9 @@
+import { ACTIONS } from '../data/actions.js';
+import { ActionType } from '../model/action.models.js';
 import { WSKCode } from '../model/key-code.models.js';
 import {
+  CharacterActionCode,
+  CharacterKeyCode,
   CharacterKeyCodeMap,
   KeyboardLayout,
   KeyboardLayoutKey,
@@ -39,4 +43,44 @@ export function convertKeyboardLayoutToCharacterKeyCodeMap(
         );
     }),
   );
+}
+
+export function getCharacterActionCodesFromCharacterKeyCode({
+  keyCode,
+  shiftKey,
+  altGraphKey,
+}: CharacterKeyCode): CharacterActionCode[] {
+  const characterActionCodes: CharacterActionCode[] = [];
+
+  const getWSKAction = (withShift: boolean) =>
+    ACTIONS.find(
+      (action) =>
+        action.type === ActionType.WSK &&
+        action.keyCode === keyCode &&
+        action.withShift === withShift,
+    );
+
+  const baseAction = getWSKAction(false);
+  if (baseAction) {
+    characterActionCodes.push({
+      actionCode: baseAction.codeId,
+      shiftKey,
+      altGraphKey,
+    });
+  }
+
+  if (!shiftKey) {
+    return characterActionCodes;
+  }
+
+  const shiftedAction = getWSKAction(true);
+  if (shiftedAction) {
+    characterActionCodes.push({
+      actionCode: shiftedAction.codeId,
+      shiftKey: false,
+      altGraphKey,
+    });
+  }
+
+  return characterActionCodes;
 }

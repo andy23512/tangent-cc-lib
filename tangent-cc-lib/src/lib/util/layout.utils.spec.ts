@@ -76,3 +76,140 @@ describe('convertKeyboardLayoutToCharacterKeyCodeMap', () => {
     );
   });
 });
+
+describe('getCharacterActionCodesFromCharacterKeyCode', () => {
+  const loadModuleWithActions = async (
+    actions: Array<Record<string, unknown>>,
+  ) => {
+    vi.resetModules();
+    vi.doMock('../data/actions.js', () => ({
+      ACTIONS: actions,
+    }));
+    return import('./layout.utils.js');
+  };
+
+  afterEach(() => {
+    vi.doUnmock('../data/actions.js');
+    vi.resetModules();
+  });
+
+  it('returns an empty array when no matching WSK action exists for the key code', async () => {
+    const { ActionType } = await import('../model/action.models.js');
+    const { getCharacterActionCodesFromCharacterKeyCode } =
+      await loadModuleWithActions([
+        {
+          type: ActionType.WSK,
+          keyCode: 'KeyZ',
+          withShift: false,
+          codeId: 'z-base',
+        },
+      ]);
+
+    expect(
+      getCharacterActionCodesFromCharacterKeyCode({
+        keyCode: 'KeyA',
+        shiftKey: false,
+        altGraphKey: false,
+      }),
+    ).toEqual([]);
+  });
+
+  it('returns the base action with the incoming modifier flags when shiftKey is false', async () => {
+    const { ActionType } = await import('../model/action.models.js');
+    const { getCharacterActionCodesFromCharacterKeyCode } =
+      await loadModuleWithActions([
+        {
+          type: ActionType.WSK,
+          keyCode: 'KeyA',
+          withShift: false,
+          codeId: 'a-base',
+        },
+        {
+          type: ActionType.WSK,
+          keyCode: 'KeyA',
+          withShift: true,
+          codeId: 'a-shift',
+        },
+      ]);
+
+    expect(
+      getCharacterActionCodesFromCharacterKeyCode({
+        keyCode: 'KeyA',
+        shiftKey: false,
+        altGraphKey: true,
+      }),
+    ).toEqual([{ actionCode: 'a-base', shiftKey: false, altGraphKey: true }]);
+  });
+
+  it('returns base action and hold-shift action when shiftKey is true and both actions exist', async () => {
+    const { ActionType } = await import('../model/action.models.js');
+    const { getCharacterActionCodesFromCharacterKeyCode } =
+      await loadModuleWithActions([
+        {
+          type: ActionType.WSK,
+          keyCode: 'KeyA',
+          withShift: false,
+          codeId: 'a-base',
+        },
+        {
+          type: ActionType.WSK,
+          keyCode: 'KeyA',
+          withShift: true,
+          codeId: 'a-shift',
+        },
+      ]);
+
+    expect(
+      getCharacterActionCodesFromCharacterKeyCode({
+        keyCode: 'KeyA',
+        shiftKey: true,
+        altGraphKey: true,
+      }),
+    ).toEqual([
+      { actionCode: 'a-base', shiftKey: true, altGraphKey: true },
+      { actionCode: 'a-shift', shiftKey: false, altGraphKey: true },
+    ]);
+  });
+
+  it('returns only the base action when shiftKey is true but no hold-shift action exists', async () => {
+    const { ActionType } = await import('../model/action.models.js');
+    const { getCharacterActionCodesFromCharacterKeyCode } =
+      await loadModuleWithActions([
+        {
+          type: ActionType.WSK,
+          keyCode: 'KeyA',
+          withShift: false,
+          codeId: 'a-base',
+        },
+      ]);
+
+    expect(
+      getCharacterActionCodesFromCharacterKeyCode({
+        keyCode: 'KeyA',
+        shiftKey: true,
+        altGraphKey: false,
+      }),
+    ).toEqual([{ actionCode: 'a-base', shiftKey: true, altGraphKey: false }]);
+  });
+
+  it('returns only the hold-shift action when shiftKey is true and base action is missing', async () => {
+    const { ActionType } = await import('../model/action.models.js');
+    const { getCharacterActionCodesFromCharacterKeyCode } =
+      await loadModuleWithActions([
+        {
+          type: ActionType.WSK,
+          keyCode: 'KeyA',
+          withShift: true,
+          codeId: 'a-shift',
+        },
+      ]);
+
+    expect(
+      getCharacterActionCodesFromCharacterKeyCode({
+        keyCode: 'KeyA',
+        shiftKey: true,
+        altGraphKey: false,
+      }),
+    ).toEqual([{ actionCode: 'a-shift', shiftKey: false, altGraphKey: false }]);
+  });
+});
