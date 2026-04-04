@@ -54,6 +54,21 @@ export function getCharacterActionCodesFromCharacterKeyCode({
 }: CharacterKeyCode): CharacterActionCode[] {
   const characterActionCodes: CharacterActionCode[] = [];
 
+  if (keyCode === 'Space') {
+    const spaceAction = ACTIONS.find(
+      (action) =>
+        action.type === ActionType.NonWSK && action.keyCode === 'Space',
+    );
+    if (spaceAction) {
+      characterActionCodes.push({
+        actionCode: spaceAction.codeId,
+        shiftKey,
+        altGraphKey,
+      });
+    }
+    return characterActionCodes;
+  }
+
   const getWSKAction = (withShift: boolean) =>
     ACTIONS.find(
       (action) =>
