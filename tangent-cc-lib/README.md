@@ -1,11 +1,18 @@
-# tangent-cc-lib
+# Tangent CC Lib
 
-This library was generated with [Nx](https://nx.dev).
+[![NPM](https://nodei.co/npm/tangent-cc-lib.png)](https://npmjs.org/package/tangent-cc-lib)
 
-## Building
+A shared TypeScript library that collect the shared things across Tangent's several CharaChorder side projects.
 
-Run `nx build tangent-cc-lib` to build the library.
+This repository is an Nx workspace that builds and publishes the `tangent-cc-lib` package from `tangent-cc-lib/`.
 
-## Running unit tests
+## What this library provides
 
-Run `nx test tangent-cc-lib` to execute the unit tests via [Vitest](https://vitest.dev/).
+- Action datasets for WSK, non-WSK, and non-key CharaChorder device actions.
+- Device layout data, key label data, and keyboard layout catalogs.
+- Strongly typed models for actions, layouts, key codes, and combinations.
+- Utility functions to:
+  - map keyboard layouts to character key maps,
+  - convert action codes into key combinations,
+  - compute modifier key positions,
+  - derive highlight combinations.
