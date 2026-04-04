@@ -1,6 +1,6 @@
 import { ACTIONS } from '../data/actions.js';
 import { ActionType } from '../model/action.models.js';
-import { WSKCode } from '../model/key-code.models.js';
+import { WSKCodeWithSpace } from '../model/key-code.models.js';
 import {
   CharacterActionCode,
   CharacterKeyCode,
@@ -19,9 +19,11 @@ export function convertKeyboardLayoutToCharacterKeyCodeMap(
   const hasShift = new Set(['withShift', 'withShiftAltGraph']);
   const hasAltGraph = new Set(['withAltGraph', 'withShiftAltGraph']);
 
-  const entries = Object.entries(keyboardLayout.layout) as Array<
-    [WSKCode, Partial<KeyboardLayoutKey>]
-  >;
+  const entries = (
+    Object.entries(keyboardLayout.layout) as Array<
+      [WSKCodeWithSpace, Partial<KeyboardLayoutKey>]
+    >
+  ).concat([['Space', { unmodified: { type: 'text', value: ' ' } }]]);
 
   return new Map(
     entries.flatMap(([keyCode, layoutKey]) => {

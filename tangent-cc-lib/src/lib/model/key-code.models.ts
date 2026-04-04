@@ -51,6 +51,8 @@ export type WSKCode =
   | 'Semicolon'
   | 'Slash';
 
+export type WSKCodeWithSpace = WSKCode | 'Space';
+
 // Reference: https://w3c.github.io/uievents-code/
 export type NonWSKCode =
   | 'AltLeft'

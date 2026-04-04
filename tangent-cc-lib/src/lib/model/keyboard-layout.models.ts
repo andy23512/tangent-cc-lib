@@ -1,5 +1,5 @@
 import { Action } from './action.models.js';
-import { WSKCode } from './key-code.models.js';
+import { WSKCode, WSKCodeWithSpace } from './key-code.models.js';
 
 export interface KeyboardLayoutKeyOutput {
   type: 'text' | 'dead-key';
@@ -33,7 +33,7 @@ export type CharacterKeyCodeMap = Map<string, CharacterKeyCode>;
  * Data for a key combination that can type out a character
  */
 export interface CharacterKeyCode {
-  keyCode: WSKCode;
+  keyCode: WSKCodeWithSpace;
   shiftKey: boolean;
   altGraphKey: boolean;
 }

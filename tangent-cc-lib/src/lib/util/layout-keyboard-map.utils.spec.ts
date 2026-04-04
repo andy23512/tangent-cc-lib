@@ -26,6 +26,7 @@ describe('convertKeyboardLayoutToCharacterKeyCodeMap', () => {
 
     expect(convertKeyboardLayoutToCharacterKeyCodeMap(keyboardLayout)).toEqual(
       new Map([
+        [' ', { keyCode: 'Space', shiftKey: false, altGraphKey: false }],
         ['a', { keyCode: 'KeyA', shiftKey: false, altGraphKey: false }],
         ['A', { keyCode: 'KeyA', shiftKey: true, altGraphKey: false }],
         ['@', { keyCode: 'KeyA', shiftKey: false, altGraphKey: true }],
@@ -50,7 +51,10 @@ describe('convertKeyboardLayoutToCharacterKeyCodeMap', () => {
     };
 
     expect(convertKeyboardLayoutToCharacterKeyCodeMap(keyboardLayout)).toEqual(
-      new Map([['B', { keyCode: 'KeyB', shiftKey: true, altGraphKey: false }]]),
+      new Map([
+        [' ', { keyCode: 'Space', shiftKey: false, altGraphKey: false }],
+        ['B', { keyCode: 'KeyB', shiftKey: true, altGraphKey: false }],
+      ]),
     );
   });
 
@@ -71,6 +75,7 @@ describe('convertKeyboardLayoutToCharacterKeyCodeMap', () => {
 
     expect(convertKeyboardLayoutToCharacterKeyCodeMap(keyboardLayout)).toEqual(
       new Map([
+        [' ', { keyCode: 'Space', shiftKey: false, altGraphKey: false }],
         ['x', { keyCode: 'KeyB', shiftKey: false, altGraphKey: false }],
       ]),
     );
