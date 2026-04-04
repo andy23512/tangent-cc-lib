@@ -28,3 +28,5 @@ export enum KeyLabelType {
   Logo = 'logo',
   ActionCode = 'action-code',
 }
+
+export type KeyLabelMap = Record<number, KeyLabel[]>;
