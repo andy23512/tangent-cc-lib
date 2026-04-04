@@ -1,5 +1,6 @@
 export * from './action.models.js';
 export * from './device-layout.models.js';
+export * from './highlight-setting.models.js';
 export * from './key-code.models.js';
 export * from './key-combination.models.js';
 export * from './key-label.models.js';

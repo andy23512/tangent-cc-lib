@@ -1,99 +1,14 @@
 import {
-  ACTIONS,
   ALT_GRAPH_ACTION_CODE,
   FLAG_SHIFT_ACTION_CODES,
   FN_SHIFT_ACTION_CODES,
   NUM_SHIFT_ACTION_CODES,
   SHIFT_ACTION_CODES,
 } from '../data/actions.js';
-import { ActionType } from '../model/action.models.js';
 import { DeviceLayout, Layer } from '../model/device-layout.models.js';
-import { WSKCode } from '../model/key-code.models.js';
+import { CharacterActionCode } from '../model/keyboard-layout.models.js';
 import { KeyCombination } from '../model/key-combination.models.js';
-import {
-  CharacterActionCode,
-  CharacterKeyCode,
-  CharacterKeyCodeMap,
-  KeyboardLayout,
-  KeyboardLayoutKey,
-} from '../model/keyboard-layout.models.js';
 import { nonNullable } from './non-nullable.utils.js';
-
-export function convertKeyboardLayoutToCharacterKeyCodeMap(
-  keyboardLayout: KeyboardLayout | null,
-): CharacterKeyCodeMap {
-  if (!keyboardLayout) {
-    return new Map();
-  }
-
-  const hasShift = new Set(['withShift', 'withShiftAltGraph']);
-  const hasAltGraph = new Set(['withAltGraph', 'withShiftAltGraph']);
-
-  const entries = Object.entries(keyboardLayout.layout) as Array<
-    [WSKCode, Partial<KeyboardLayoutKey>]
-  >;
-
-  return new Map(
-    entries.flatMap(([keyCode, layoutKey]) => {
-      if (!layoutKey) {
-        return [];
-      }
-      return Object.entries(layoutKey)
-        .filter(([, output]) => output?.type === 'text')
-        .map(
-          ([modifier, output]) =>
-            [
-              output.value,
-              {
-                keyCode,
-                shiftKey: hasShift.has(modifier),
-                altGraphKey: hasAltGraph.has(modifier),
-              },
-            ] as const,
-        );
-    }),
-  );
-}
-
-export function getCharacterActionCodesFromCharacterKeyCode({
-  keyCode,
-  shiftKey,
-  altGraphKey,
-}: CharacterKeyCode): CharacterActionCode[] {
-  const characterActionCodes: CharacterActionCode[] = [];
-
-  const getWSKAction = (withShift: boolean) =>
-    ACTIONS.find(
-      (action) =>
-        action.type === ActionType.WSK &&
-        action.keyCode === keyCode &&
-        action.withShift === withShift,
-    );
-
-  const baseAction = getWSKAction(false);
-  if (baseAction) {
-    characterActionCodes.push({
-      actionCode: baseAction.codeId,
-      shiftKey,
-      altGraphKey,
-    });
-  }
-
-  if (!shiftKey) {
-    return characterActionCodes;
-  }
-
-  const shiftedAction = getWSKAction(true);
-  if (shiftedAction) {
-    characterActionCodes.push({
-      actionCode: shiftedAction.codeId,
-      shiftKey: false,
-      altGraphKey,
-    });
-  }
-
-  return characterActionCodes;
-}
 
 function getLayerFromIndex(layerIndex: number): Layer {
   switch (layerIndex) {
@@ -170,7 +85,17 @@ function getPositionCodesForActionCodes(
     .flat();
 }
 
-export function getModifierKeyPositionCodeMap(deviceLayout: DeviceLayout) {
+export type ModifierKeyPositionCodeMap = {
+  shift: number[];
+  numShift: number[];
+  fnShift: number[];
+  flagShift: number[];
+  altGraph: number[];
+};
+
+export function getModifierKeyPositionCodeMap(
+  deviceLayout: DeviceLayout,
+): ModifierKeyPositionCodeMap {
   return {
     shift: getPositionCodesForActionCodes(SHIFT_ACTION_CODES, deviceLayout),
     numShift: getNumShiftKeyPositionCodes(deviceLayout),
