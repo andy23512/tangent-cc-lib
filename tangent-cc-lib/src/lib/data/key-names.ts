@@ -287,4 +287,7 @@ export const NON_KEY_ACTION_NAME_2_KEY_NAMES_MAP: Record<
   RightHandPinkyCenter: [],
   RightHandMiddle2Center: [],
   RightHandRing2Center: [],
+  HoldCompound: [],
+  ReleaseCompound: [],
+  Join: [],
 };

@@ -486,6 +486,21 @@ export const NON_KEY_ACTION_NAME_2_RAW_KEY_LABEL_MAP: Record<
     c: 'radio_button_checked',
     title: 'key-label.right-hand-ring-2-center',
   },
+  HoldCompound: {
+    type: KeyLabelType.Icon,
+    c: 'layers',
+    title: 'key-label.hold-compound',
+  },
+  ReleaseCompound: {
+    type: KeyLabelType.Icon,
+    c: 'layers_clear',
+    title: 'key-label.release-compound',
+  },
+  Join: {
+    type: KeyLabelType.Icon,
+    c: 'join_inner',
+    title: 'key-label.join',
+  },
 };
 
 export const OS_2_META_KEY_LABEL_MAP: Partial<
