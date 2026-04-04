@@ -6,11 +6,6 @@ import {
   WSKAction,
 } from '../model/action.models.js';
 
-export const NUM_SHIFT_ACTION_CODES = [550, 551];
-export const FN_SHIFT_ACTION_CODES = [552, 553];
-export const FLAG_SHIFT_ACTION_CODES = [554, 555];
-export const SHIFT_ACTION_CODES = [513, 517];
-export const ALT_GRAPH_ACTION_CODE = 518;
 export const WSK_ACTIONS: Omit<WSKAction, 'type'>[] = [
   { codeId: 33, keyCode: 'Digit1', withShift: true },
   { codeId: 34, keyCode: 'Quote', withShift: true },
@@ -241,3 +236,39 @@ export const ACTIONS: Action[] = [
     type: ActionType.NonKey as const,
   })),
 ];
+
+const getNonKeyActionCodesByActionNames = (actionNames: readonly string[]) =>
+  NON_KEY_ACTIONS.filter((a) => actionNames.includes(a.actionName)).map(
+    (a) => a.codeId,
+  );
+
+const getNonWSKActionCodesByKeyCodes = (keyCodes: readonly string[]) =>
+  NON_WSK_ACTIONS.filter((a) => keyCodes.includes(a.keyCode)).map(
+    (a) => a.codeId,
+  );
+
+export const NUM_SHIFT_ACTION_CODES = getNonKeyActionCodesByActionNames([
+  'SecondaryKeymapLeft',
+  'SecondaryKeymapRight',
+]);
+
+export const FN_SHIFT_ACTION_CODES = getNonKeyActionCodesByActionNames([
+  'TertiaryKeymapLeft',
+  'TertiaryKeymapRight',
+]);
+
+export const FLAG_SHIFT_ACTION_CODES = getNonKeyActionCodesByActionNames([
+  'QuaternaryKeymapLeft',
+  'QuaternaryKeymapRight',
+]);
+
+export const SHIFT_ACTION_CODES = getNonWSKActionCodesByKeyCodes([
+  'ShiftLeft',
+  'ShiftRight',
+]);
+
+const altGraphAction = NON_WSK_ACTIONS.find((a) => a.keyCode === 'AltRight');
+if (!altGraphAction) {
+  throw new Error('AltRight action code not found');
+}
+export const ALT_GRAPH_ACTION_CODE = altGraphAction.codeId;
