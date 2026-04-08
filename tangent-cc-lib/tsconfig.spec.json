@@ -6,7 +6,7 @@
       "vitest/globals",
       "vitest/importMeta",
       "vite/client",
-      "node",
+      "w3c-web-serial",
       "vitest"
     ],
     "forceConsistentCasingInFileNames": true

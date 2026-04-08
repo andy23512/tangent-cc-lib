@@ -1,4 +1,5 @@
 export * from './actions.js';
+export * from './charachorder-device-ports.js';
 export * from './character-name-map.js';
 export * from './device-layouts.js';
 export * from './key-labels.js';

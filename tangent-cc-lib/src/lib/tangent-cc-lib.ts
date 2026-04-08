@@ -1,3 +1,4 @@
+export * from './class/index.js';
 export * from './data/index.js';
 export * from './model/index.js';
 export * from './type/index.js';
