@@ -1,4 +1,8 @@
-import { Chord, ChordInNumberListForm } from '../model/chord.models.js';
+import {
+  Chord,
+  ChordInNumberListForm,
+  ChordTreeNode,
+} from '../model/chord.models.js';
 import { hashChord } from './raw-chord.utils.js';
 
 export function getParentHashFromChordAction(
@@ -32,4 +36,18 @@ export function convertChordInNumberListFormToChord([
     actions: action,
     output: phrase,
   };
+}
+
+export function convertChordsToChordTreeNodes(
+  chords: Chord[],
+  parentHash: number | null = null,
+  level = 0,
+): ChordTreeNode[] {
+  return chords
+    .filter((chord) => chord.parentId === parentHash)
+    .map((chord) => ({
+      ...chord,
+      level,
+      children: convertChordsToChordTreeNodes(chords, chord.id, level + 1),
+    }));
 }
