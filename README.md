@@ -2,7 +2,7 @@
 
 [![NPM](https://nodei.co/npm/tangent-cc-lib.png)](https://npmjs.org/package/tangent-cc-lib)
 
-A shared TypeScript library that collect the shared things across Tangent's several CharaChorder side projects.
+A shared TypeScript library that collects reusable data models, datasets, and utilities across Tangent's CharaChorder side projects.
 
 This repository is an Nx workspace that builds and publishes the `tangent-cc-lib` package from `tangent-cc-lib/`.
 
@@ -17,21 +17,22 @@ This repository is an Nx workspace that builds and publishes the `tangent-cc-lib
   - compute modifier key positions,
   - derive highlight combinations.
 
-## Workspace layout
+## Repository structure
 
 ```text
 .
-├─ tangent-cc-lib/           # Publishable package
+├─ tangent-cc-lib/           # Publishable npm package
 │  ├─ src/
+│  ├─ dist/                  # Build output
 │  └─ package.json
-├─ packages/                 # Reserved workspace packages
+├─ packages/                 # Reserved for additional workspace packages
 ├─ nx.json
 └─ package.json
 ```
 
 ## Prerequisites
 
-- Node.js 20+ (recommended)
+- Node.js 20+
 - npm 10+
 
 ## Install dependencies
@@ -66,6 +67,23 @@ Install in another project:
 npm install tangent-cc-lib
 ```
 
+Example:
+
+```ts
+import {
+  ACTIONS,
+  KEYBOARD_LAYOUTS_FROM_KBDLAYOUT,
+  convertKeyboardLayoutToCharacterKeyCodeMap,
+} from 'tangent-cc-lib';
+
+const usLayout =
+  KEYBOARD_LAYOUTS_FROM_KBDLAYOUT.find((layout) => layout.id === 'en-US') ??
+  null;
+const keyMap = convertKeyboardLayoutToCharacterKeyCodeMap(usLayout);
+
+console.log(ACTIONS.length, keyMap.size);
+```
+
 ## Publishing
 
 The root workspace includes a convenience script:
@@ -90,6 +108,7 @@ Before publishing, make sure:
 - The workspace uses Nx plugins for TypeScript build, ESLint, and Vitest.
 - Tests live alongside source files as `*.spec.ts`.
 - The package entry point is `tangent-cc-lib/src/index.ts`.
+- The package-focused README for npm consumers is in `tangent-cc-lib/README.md`.
 
 ## License
 
