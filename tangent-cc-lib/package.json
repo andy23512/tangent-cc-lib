@@ -1,6 +1,6 @@
 {
   "name": "tangent-cc-lib",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Tangent CC Lib is a shared TypeScript library that collects the shared things across Tangent's several CharaChorder side projects.",
   "homepage": "https://github.com/andy23512/tangent-cc-lib",
   "bugs": {
