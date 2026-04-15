@@ -14,6 +14,10 @@ export type KeyboardLayoutKey = Record<
   KeyboardLayoutKeyOutput
 >;
 
+export type KeyboardLayoutLayout = Partial<
+  Record<WSKCode, Partial<KeyboardLayoutKey>>
+>;
+
 /**
  * Data of a keyboard layout (OS layout), which map key codes to keyboard layout keys
  */
@@ -21,7 +25,7 @@ export interface KeyboardLayout {
   id: string;
   name: string;
   reference: string;
-  layout: Partial<Record<WSKCode, Partial<KeyboardLayoutKey>>>;
+  layout: KeyboardLayoutLayout;
 }
 
 /**
