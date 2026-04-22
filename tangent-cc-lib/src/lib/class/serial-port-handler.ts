@@ -1,4 +1,4 @@
-import { CHARACHORDER_DEVICE_PORTS } from '../data/charachorder-device-ports.js';
+import { CHARACHORDER_DEVICE_PORTS } from '../data/charachorder-device.js';
 
 export class SerialPortHandler {
   constructor(
