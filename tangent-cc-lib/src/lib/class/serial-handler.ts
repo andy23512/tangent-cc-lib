@@ -64,7 +64,7 @@ export class SerialHandler {
     }
     const device = this.id.split(' ')[1];
     const keyCount = device === 'LITE' || device === 'X' ? 67 : 90;
-    return lastValueFrom(
+    const layout = await lastValueFrom(
       from([
         Layer.Primary,
         Layer.Secondary,
@@ -85,6 +85,10 @@ export class SerialHandler {
         toArray(),
       ) as Observable<DeviceLayout['layout']>,
     );
+    if (layout[3]?.every((action) => action === 0)) {
+      return layout.slice(0, 3) as DeviceLayout['layout'];
+    }
+    return layout;
   }
 
   public loadChords(): Observable<
