@@ -3,6 +3,7 @@ import {
   filter,
   firstValueFrom,
   from,
+  lastValueFrom,
   map,
   Observable,
   Subject,
@@ -14,6 +15,7 @@ import {
   ChordInNumberListForm,
   ChordLibraryLoadStatus,
 } from '../model/chord.models.js';
+import { DeviceLayout, Layer } from '../model/device-layout.models.js';
 import {
   SerialCommand,
   SerialCommandArgMap,
@@ -31,6 +33,8 @@ export class SerialHandler {
   private reader!: ReadableStreamDefaultReader<string>;
   private readableStreamClosed!: Promise<void>;
   private writableStreamClosed!: Promise<void>;
+  public version: string | null = null;
+  public id: string | null = null;
 
   constructor(private readonly serialPortHandler: SerialPortHandler) {}
 
@@ -49,7 +53,38 @@ export class SerialHandler {
 
     const version = await this.send(SerialCommand.Version);
     const id = await this.send(SerialCommand.Id);
+    this.version = version;
+    this.id = id;
     return { version, id };
+  }
+
+  public async loadLayout(): Promise<DeviceLayout['layout']> {
+    if (!this.id) {
+      throw new Error('Device ID is not available');
+    }
+    const device = this.id.split(' ')[1];
+    const keyCount = device === 'LITE' || device === 'X' ? 67 : 90;
+    return lastValueFrom(
+      from([
+        Layer.Primary,
+        Layer.Secondary,
+        Layer.Tertiary,
+        Layer.Quaternary,
+      ]).pipe(
+        concatMap(
+          (layer) =>
+            from(Array.from({ length: keyCount }, (_, i) => i)).pipe(
+              concatMap((keyIndex) =>
+                from(this.send(SerialCommand.GetKeyMap, layer, keyIndex)).pipe(
+                  map((data) => Number.parseInt(data, 10)),
+                ),
+              ),
+              toArray(),
+            ) as Observable<DeviceLayout['layout'][number]>,
+        ),
+        toArray(),
+      ) as Observable<DeviceLayout['layout']>,
+    );
   }
 
   public loadChords(): Observable<
@@ -150,6 +185,8 @@ export class SerialHandler {
     this.writer.close();
     await this.writableStreamClosed;
     await this.port.close();
+    this.id = null;
+    this.version = null;
   }
 
   private async startReadLoop() {
