@@ -26,7 +26,7 @@ import { parseChordActions, parsePhrase } from '../util/raw-chord.utils.js';
 import { LineBreakTransformer } from './line-break-transformer.js';
 import { SerialPortHandler } from './serial-port-handler.js';
 
-export class SerialHandler extends (EventEmitter2 as new () => TypedEmitter<>) {
+export class SerialHandler extends EventEmitter2 {
   private port!: SerialPort;
   private readonly webSerialDataSubject = new Subject<string>();
   private readonly webSerialData$ = this.webSerialDataSubject.asObservable();
