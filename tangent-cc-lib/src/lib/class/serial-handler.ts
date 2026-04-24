@@ -1,3 +1,4 @@
+import { EventEmitter2 } from 'eventemitter2';
 import {
   concatMap,
   filter,
@@ -25,7 +26,7 @@ import { parseChordActions, parsePhrase } from '../util/raw-chord.utils.js';
 import { LineBreakTransformer } from './line-break-transformer.js';
 import { SerialPortHandler } from './serial-port-handler.js';
 
-export class SerialHandler {
+export class SerialHandler extends (EventEmitter2 as new () => TypedEmitter<>) {
   private port!: SerialPort;
   private readonly webSerialDataSubject = new Subject<string>();
   private readonly webSerialData$ = this.webSerialDataSubject.asObservable();
@@ -36,7 +37,9 @@ export class SerialHandler {
   public version: string | null = null;
   public id: string | null = null;
 
-  constructor(private readonly serialPortHandler: SerialPortHandler) {}
+  constructor(private readonly serialPortHandler: SerialPortHandler) {
+    super();
+  }
 
   public async connect() {
     this.port = await this.serialPortHandler.getPort();
@@ -173,9 +176,11 @@ export class SerialHandler {
 
   private async sendData(data: string) {
     await this.writer.write(data + '\r\n');
+    this.emit('sendSerialData', data);
     return firstValueFrom(
       this.webSerialData$.pipe(
         filter((d) => d.startsWith(data)),
+        tap((d) => this.emit('receiveSerialData', d)),
         map((d) => d.substring(data.length + 1).trim()),
       ),
     );
