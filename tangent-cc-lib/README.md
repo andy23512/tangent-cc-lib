@@ -23,27 +23,6 @@ This repository is an Nx workspace that builds and publishes the `tangent-cc-lib
 npm install tangent-cc-lib
 ```
 
-## Basic usage
-
-```ts
-import {
-  ACTIONS,
-  KEYBOARD_LAYOUTS_FROM_KBDLAYOUT,
-  DEFAULT_DEVICE_LAYOUT,
-  convertKeyboardLayoutToCharacterKeyCodeMap,
-  getModifierKeyPositionCodeMap,
-} from 'tangent-cc-lib';
-
-const usKeyboardLayout =
-  KEYBOARD_LAYOUTS_FROM_KBDLAYOUT.find((layout) => layout.id === 'en-US') ??
-  null;
-const keyMap = convertKeyboardLayoutToCharacterKeyCodeMap(usKeyboardLayout);
-
-const modifierMap = getModifierKeyPositionCodeMap(DEFAULT_DEVICE_LAYOUT);
-
-console.log(ACTIONS.length, keyMap.size, modifierMap?.shift.length ?? 0);
-```
-
 ## Build and test (workspace)
 
 From the repository root:

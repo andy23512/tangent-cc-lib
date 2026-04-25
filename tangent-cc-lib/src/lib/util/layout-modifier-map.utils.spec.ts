@@ -83,7 +83,7 @@ describe('modifier position utilities', () => {
   });
 
   it('getModifierKeyPositionCodeMap returns combined modifier positions', async () => {
-    const { getModifierKeyPositionCodeMap } =
+    const { getLayerShiftPositionCodeMap: getModifierKeyPositionCodeMap } =
       await loadModuleWithActionConstants();
     const deviceLayout = {
       layout: [

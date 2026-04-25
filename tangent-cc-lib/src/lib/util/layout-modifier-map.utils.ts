@@ -5,9 +5,10 @@ import {
   NUM_SHIFT_ACTION_CODES,
   SHIFT_ACTION_CODES,
 } from '../data/actions.js';
+import { LAYERS } from '../data/keyboard-layout/layers.js';
 import { DeviceLayout, Layer } from '../model/device-layout.models.js';
-import { CharacterActionCode } from '../model/keyboard-layout.models.js';
 import { KeyCombination } from '../model/key-combination.models.js';
+import { CharacterActionCode } from '../model/keyboard-layout.models.js';
 import { nonNullable } from './non-nullable.utils.js';
 
 function getLayerFromIndex(layerIndex: number): Layer {
@@ -73,38 +74,62 @@ export function getFlagShiftKeyPositionCodes(
 function getPositionCodesForActionCodes(
   actionCodes: readonly number[],
   deviceLayout: DeviceLayout,
+  layer: Layer,
 ): number[] {
   return actionCodes
     .map((actionCode) =>
       getKeyCombinationsFromActionCodes(
         [{ actionCode, shiftKey: false, altGraphKey: false }],
         deviceLayout,
-      )?.map((combination) => combination.characterKeyPositionCode),
+      )
+        ?.filter((combination) => combination.layer === layer)
+        .map((combination) => combination.characterKeyPositionCode),
     )
     .filter(nonNullable)
     .flat();
 }
 
-export type ModifierKeyPositionCodeMap = {
-  shift: number[];
+export type LayerShiftPositionCodeMap = {
   numShift: number[];
   fnShift: number[];
   flagShift: number[];
-  altGraph: number[];
 };
+
+export interface ModifierKeyPositionCodeMap {
+  shift: Record<Layer, number[]>;
+  altGraph: Record<Layer, number[]>;
+}
+
+export function getLayerShiftPositionCodeMap(
+  deviceLayout: DeviceLayout,
+): LayerShiftPositionCodeMap {
+  return {
+    numShift: getNumShiftKeyPositionCodes(deviceLayout),
+    fnShift: getFnShiftKeyPositionCodes(deviceLayout),
+    flagShift: getFlagShiftKeyPositionCodes(deviceLayout),
+  };
+}
 
 export function getModifierKeyPositionCodeMap(
   deviceLayout: DeviceLayout,
 ): ModifierKeyPositionCodeMap {
   return {
-    shift: getPositionCodesForActionCodes(SHIFT_ACTION_CODES, deviceLayout),
-    numShift: getNumShiftKeyPositionCodes(deviceLayout),
-    fnShift: getFnShiftKeyPositionCodes(deviceLayout),
-    flagShift: getFlagShiftKeyPositionCodes(deviceLayout),
-    altGraph: getPositionCodesForActionCodes(
-      [ALT_GRAPH_ACTION_CODE],
-      deviceLayout,
-    ),
+    shift: Object.fromEntries(
+      LAYERS.map((layer) => [
+        layer,
+        getPositionCodesForActionCodes(SHIFT_ACTION_CODES, deviceLayout, layer),
+      ]),
+    ) as Record<Layer, number[]>,
+    altGraph: Object.fromEntries(
+      LAYERS.map((layer) => [
+        layer,
+        getPositionCodesForActionCodes(
+          [ALT_GRAPH_ACTION_CODE],
+          deviceLayout,
+          layer,
+        ),
+      ]),
+    ) as Record<Layer, number[]>,
   };
 }
 
