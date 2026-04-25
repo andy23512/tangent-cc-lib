@@ -1,4 +1,4 @@
-import { Layer } from "src/lib/tangent-cc-lib.js";
+import { Layer } from '../model/device-layout.models.js';
 
 export const LAYERS = [
   Layer.Primary,
