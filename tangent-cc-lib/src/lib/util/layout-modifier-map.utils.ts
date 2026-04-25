@@ -5,7 +5,7 @@ import {
   NUM_SHIFT_ACTION_CODES,
   SHIFT_ACTION_CODES,
 } from '../data/actions.js';
-import { LAYERS } from '../data/keyboard-layout/layers.js';
+import { LAYERS } from '../data/layers.js';
 import { DeviceLayout, Layer } from '../model/device-layout.models.js';
 import { KeyCombination } from '../model/key-combination.models.js';
 import { CharacterActionCode } from '../model/keyboard-layout.models.js';
