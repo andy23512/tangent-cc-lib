@@ -40,14 +40,23 @@ export function convertChordInNumberListFormToChord([
 
 export function convertChordsToChordTreeNodes(
   chords: Chord[],
-  parentHash: number | null = null,
-  level = 0,
+  ancestors: ChordTreeNode[] = [],
 ): ChordTreeNode[] {
+  const level = ancestors.length;
+  const parentHash = level > 0 ? ancestors.at(-1)?.id : null;
   return chords
     .filter((chord) => chord.parentId === parentHash)
-    .map((chord) => ({
-      ...chord,
-      level,
-      children: convertChordsToChordTreeNodes(chords, chord.id, level + 1),
-    }));
+    .map((chord) => {
+      const node = {
+        ...chord,
+        level,
+        ancestors,
+        children: [] as ChordTreeNode[],
+      };
+      node.children = convertChordsToChordTreeNodes(chords, [
+        ...ancestors,
+        node,
+      ]);
+      return node;
+    });
 }

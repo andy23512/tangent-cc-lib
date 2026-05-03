@@ -12,6 +12,7 @@ export interface Chord {
 export interface ChordTreeNode extends Chord {
   level: number;
   children: ChordTreeNode[];
+  ancestors: ChordTreeNode[];
 }
 
 export interface ChordLibraryLoadStatus {
