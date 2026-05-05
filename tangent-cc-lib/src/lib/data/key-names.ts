@@ -406,7 +406,7 @@ export const NON_KEY_ACTION_NAME_2_KEY_NAMES_MAP: Record<
   Mute: ['mute', '靜音'],
   VolumeUp: ['volume up', '調高音量'],
   VolumeDown: ['volume down', '調低音量'],
-  Search: ['search', '搜索'],
+  Search: ['search', '搜尋'],
   Back: ['back', '返回'],
   Forward: ['forward', '前進'],
 };
