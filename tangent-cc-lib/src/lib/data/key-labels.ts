@@ -501,6 +501,53 @@ export const NON_KEY_ACTION_NAME_2_RAW_KEY_LABEL_MAP: Record<
     c: 'join_inner',
     title: 'key-label.join',
   },
+  BrightnessUp: {
+    type: KeyLabelType.Icon,
+    c: 'brightness_high',
+    title: 'key-label.brightness-up',
+  },
+  BrightnessDown: {
+    type: KeyLabelType.Icon,
+    c: 'brightness_low',
+    title: 'key-label.brightness-down',
+  },
+  PlayPause: {
+    type: KeyLabelType.Icon,
+    c: 'play_pause',
+    title: 'key-label.play-pause',
+  },
+  NextTrack: {
+    type: KeyLabelType.Icon,
+    c: 'skip_next',
+    title: 'key-label.next-track',
+  },
+  PreviousTrack: {
+    type: KeyLabelType.Icon,
+    c: 'skip_previous',
+    title: 'key-label.previous-track',
+  },
+  Mute: { type: KeyLabelType.Icon, c: 'no_sound', title: 'key-label.mute' },
+  VolumeUp: {
+    type: KeyLabelType.Icon,
+    c: 'volume_up',
+    title: 'key-label.volume-up',
+  },
+  VolumeDown: {
+    type: KeyLabelType.Icon,
+    c: 'volume_down',
+    title: 'key-label.volume-down',
+  },
+  Search: { type: KeyLabelType.Icon, c: 'search', title: 'key-label.search' },
+  Back: {
+    type: KeyLabelType.Icon,
+    c: 'chevron_backward',
+    title: 'key-label.back',
+  },
+  Forward: {
+    type: KeyLabelType.Icon,
+    c: 'chevron_forward',
+    title: 'key-label.forward',
+  },
 };
 
 export const OS_2_META_KEY_LABEL_MAP: Partial<

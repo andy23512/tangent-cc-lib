@@ -240,6 +240,17 @@ export const NON_KEY_ACTIONS: Omit<NonKeyAction, 'type'>[] = [
   { codeId: 615, actionName: 'RightHandPinkyCenter' },
   { codeId: 616, actionName: 'RightHandMiddle2Center' },
   { codeId: 617, actionName: 'RightHandRing2Center' },
+  { codeId: 803, actionName: 'BrightnessUp' },
+  { codeId: 804, actionName: 'BrightnessDown' },
+  { codeId: 809, actionName: 'PlayPause' },
+  { codeId: 810, actionName: 'NextTrack' },
+  { codeId: 811, actionName: 'PreviousTrack' },
+  { codeId: 814, actionName: 'Mute' },
+  { codeId: 818, actionName: 'VolumeUp' },
+  { codeId: 819, actionName: 'VolumeDown' },
+  { codeId: 828, actionName: 'Search' },
+  { codeId: 830, actionName: 'Back' },
+  { codeId: 831, actionName: 'Forward' },
 ];
 export const NO_ACTION_ACTION_CODES = [0];
 export const ACTIONS: Action[] = [

@@ -59,7 +59,18 @@ export type NonKeyActionName =
   | 'RightHandRing2Center'
   | 'HoldCompound'
   | 'ReleaseCompound'
-  | 'Join';
+  | 'Join'
+  | 'BrightnessUp'
+  | 'BrightnessDown'
+  | 'PlayPause'
+  | 'NextTrack'
+  | 'PreviousTrack'
+  | 'Mute'
+  | 'VolumeUp'
+  | 'VolumeDown'
+  | 'Search'
+  | 'Back'
+  | 'Forward';
 
 export interface WSKAction extends BaseAction {
   type: ActionType.WSK;
