@@ -20,6 +20,8 @@ export enum ActionVariant {
 export type NonKeyActionName =
   | 'NoKeyPressed'
   | 'RestartInputDevice'
+  | 'PressNext'
+  | 'ReleaseNext'
   | 'MouseLeftClick'
   | 'MouseRightClick'
   | 'MouseMiddleClick'

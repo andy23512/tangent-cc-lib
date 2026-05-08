@@ -280,6 +280,16 @@ export const NON_KEY_ACTION_NAME_2_RAW_KEY_LABEL_MAP: Record<
     c: 'restart_alt',
     title: 'key-label.restart-input-device',
   },
+  PressNext: {
+    type: KeyLabelType.Icon,
+    c: 'download',
+    title: 'key-label.press-next',
+  },
+  ReleaseNext: {
+    type: KeyLabelType.Icon,
+    c: 'upload',
+    title: 'key-label.release-next',
+  },
   MouseLeftClick: {
     type: KeyLabelType.Icon,
     c: 'left_click',

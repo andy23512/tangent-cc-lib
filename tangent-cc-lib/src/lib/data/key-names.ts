@@ -156,6 +156,16 @@ export const NON_KEY_ACTION_NAME_2_KEY_NAMES_MAP: Record<
     'restart input device',
     '重新啟動輸入裝置',
   ],
+  PressNext: [
+    'press next',
+    'press and do not release the next key/action',
+    '按住下個動作',
+  ],
+  ReleaseNext: [
+    'release next',
+    'release the next key/action in the sequence',
+    '放開下個動作',
+  ],
   MouseLeftClick: [
     'mouse left click',
     'mouse left button press/release',

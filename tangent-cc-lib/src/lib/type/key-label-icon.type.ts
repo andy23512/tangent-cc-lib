@@ -15,6 +15,7 @@ export type KeyLabelIcon =
   | 'counter_2'
   | 'counter_3'
   | 'counter_4'
+  | 'download'
   | 'heap_snapshot_multiple'
   | 'home'
   | 'insert_text'
@@ -52,6 +53,7 @@ export type KeyLabelIcon =
   | 'switch_right'
   | 'terminal'
   | 'touchpad_mouse'
+  | 'upload'
   | 'volume_down'
   | 'volume_up'
   | 'window';
