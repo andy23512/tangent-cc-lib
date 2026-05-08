@@ -12,6 +12,11 @@ export enum ActionType {
   NonKey = 'non-key',
 }
 
+export enum ActionVariant {
+  Left = 'left',
+  Right = 'right',
+}
+
 export type NonKeyActionName =
   | 'NoKeyPressed'
   | 'RestartInputDevice'
@@ -81,11 +86,13 @@ export interface WSKAction extends BaseAction {
 export interface NonWSKAction extends BaseAction {
   type: ActionType.NonWSK;
   keyCode: NonWSKCode;
+  variant?: ActionVariant;
 }
 
 export interface NonKeyAction extends BaseAction {
   type: ActionType.NonKey;
   actionName: NonKeyActionName;
+  variant?: ActionVariant;
 }
 
 /**
