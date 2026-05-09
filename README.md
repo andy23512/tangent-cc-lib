@@ -1,6 +1,6 @@
 # Tangent CC Lib
 
-[![NPM](https://nodei.co/npm/tangent-cc-lib.png)](https://npmjs.org/package/tangent-cc-lib)
+[NPM](https://npmjs.org/package/tangent-cc-lib)
 
 A shared TypeScript library that collects reusable data models, datasets, and utilities across Tangent's CharaChorder side projects.
 
@@ -113,3 +113,7 @@ Before publishing, make sure:
 ## License
 
 MIT
+
+## Changelog
+
+[View Changelog](./CHANGELOG.md)
