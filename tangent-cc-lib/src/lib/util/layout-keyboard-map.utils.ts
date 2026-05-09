@@ -57,7 +57,8 @@ export function getCharacterActionCodesFromCharacterKeyCode({
   if (keyCode === 'Space') {
     const spaceActions = ACTIONS.filter(
       (action) =>
-        action.type === ActionType.NonWSK && action.keyCode === 'Space',
+        action.type === ActionType.NonWSK &&
+        (action.keyCode === 'SpaceLeft' || action.keyCode === 'SpaceRight'),
     );
     spaceActions.forEach((action) => {
       characterActionCodes.push({

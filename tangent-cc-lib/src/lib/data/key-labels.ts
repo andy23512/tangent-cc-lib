@@ -115,10 +115,15 @@ export const NON_WSK_CODE_2_RAW_KEY_LABEL_MAP: Record<NonWSKCode, RawKeyLabel> =
       c: 'shift',
       title: 'key-label.shift-right',
     },
-    Space: {
+    SpaceLeft: {
       type: KeyLabelType.Icon,
       c: 'space_bar',
-      title: 'key-label.space',
+      title: 'key-label.space-left',
+    },
+    SpaceRight: {
+      type: KeyLabelType.Icon,
+      c: 'space_bar',
+      title: 'key-label.space-right',
     },
     Tab: { type: KeyLabelType.Icon, c: 'keyboard_tab', title: 'key-label.tab' },
     Escape: { type: KeyLabelType.String, c: 'ESC', title: 'key-label.esc' },

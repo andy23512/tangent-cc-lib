@@ -54,6 +54,7 @@ export type WSKCode =
 export type WSKCodeWithSpace = WSKCode | 'Space';
 
 // Reference: https://w3c.github.io/uievents-code/
+// Note that Space is splitted into SpaceLeft and SpaceRight here to align with the action code of CharaChorder device
 export type NonWSKCode =
   | 'AltLeft'
   | 'AltRight'
@@ -67,7 +68,8 @@ export type NonWSKCode =
   | 'MetaRight'
   | 'ShiftLeft'
   | 'ShiftRight'
-  | 'Space'
+  | 'SpaceLeft'
+  | 'SpaceRight'
   | 'Tab'
   | 'Escape'
   | 'F1'
