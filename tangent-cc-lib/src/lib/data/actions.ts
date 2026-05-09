@@ -177,6 +177,7 @@ export const NON_WSK_ACTIONS: Omit<NonWSKAction, 'type'>[] = [
   { codeId: 829, keyCode: 'Home' },
 ];
 export const NON_KEY_ACTIONS: Omit<NonKeyAction, 'type'>[] = [
+  { codeId: 160, actionName: 'NoBreakSpace' },
   { codeId: 256, actionName: 'NoKeyPressed' },
   { codeId: 528, actionName: 'RestartInputDevice' },
   { codeId: 523, actionName: 'PressNext' },

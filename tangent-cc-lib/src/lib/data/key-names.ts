@@ -149,6 +149,7 @@ export const NON_KEY_ACTION_NAME_2_KEY_NAMES_MAP: Record<
   NonKeyActionName,
   string[]
 > = {
+  NoBreakSpace: ['no break space', '不換行空格'],
   NoKeyPressed: ['no key pressed', '不按下任何鍵'],
   RestartInputDevice: [
     'restart',

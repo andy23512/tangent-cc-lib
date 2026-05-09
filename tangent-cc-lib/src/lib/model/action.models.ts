@@ -18,6 +18,7 @@ export enum ActionVariant {
 }
 
 export type NonKeyActionName =
+  | 'NoBreakSpace'
   | 'NoKeyPressed'
   | 'RestartInputDevice'
   | 'PressNext'

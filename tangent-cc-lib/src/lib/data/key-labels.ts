@@ -270,6 +270,11 @@ export const NON_KEY_ACTION_NAME_2_RAW_KEY_LABEL_MAP: Record<
   NonKeyActionName,
   RawKeyLabel
 > = {
+  NoBreakSpace: {
+    type: KeyLabelType.String,
+    c: 'NBSP',
+    title: 'key-label.no-break-space',
+  },
   NoKeyPressed: {
     type: KeyLabelType.Icon,
     c: 'block',
