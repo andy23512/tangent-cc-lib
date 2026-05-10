@@ -8,6 +8,7 @@ export type RawKeyLabel =
       c: string;
       title: string;
       isDeadKey?: boolean;
+      isWindowsAltCode?: boolean;
     }
   | { type: KeyLabelType.Icon; c: KeyLabelIcon; title: string }
   | { type: KeyLabelType.Logo; c: FontLogo; title: string }
