@@ -10,6 +10,7 @@ export type KeyLabelIcon =
   | 'brightness_low'
   | 'chevron_backward'
   | 'chevron_forward'
+  | 'clock_loader_10'
   | 'copy_all'
   | 'counter_1'
   | 'counter_2'

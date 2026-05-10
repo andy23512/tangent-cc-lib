@@ -521,6 +521,11 @@ export const NON_KEY_ACTION_NAME_2_RAW_KEY_LABEL_MAP: Record<
     c: 'join_inner',
     title: 'key-label.join',
   },
+  Delay1Ms: {
+    type: KeyLabelType.Icon,
+    c: 'clock_loader_10',
+    title: 'key-label.delay-1-ms',
+  },
   BrightnessUp: {
     type: KeyLabelType.Icon,
     c: 'brightness_high',
