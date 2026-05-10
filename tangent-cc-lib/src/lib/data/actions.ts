@@ -4,6 +4,7 @@ import {
   ActionVariant,
   NonKeyAction,
   NonWSKAction,
+  WindowsAltCodeAction,
   WSKAction,
 } from '../model/action.models.js';
 
@@ -262,6 +263,7 @@ export const NON_KEY_ACTIONS: Omit<NonKeyAction, 'type'>[] = [
     title: 'Join',
     description: 'Delete the concatenator of the previous chord',
   },
+  { codeId: 579, actionName: 'Delay1Ms' },
   { codeId: 600, actionName: 'LeftHandThumb3Center' },
   { codeId: 601, actionName: 'LeftHandThumb2Center' },
   { codeId: 602, actionName: 'LeftHandThumb1Center' },
@@ -292,6 +294,10 @@ export const NON_KEY_ACTIONS: Omit<NonKeyAction, 'type'>[] = [
   { codeId: 830, actionName: 'Back' },
   { codeId: 831, actionName: 'Forward' },
 ];
+export const WINDOWS_ALT_CODE_ACTIONS: Omit<WindowsAltCodeAction, 'type'>[] = [
+  { codeId: 233, character: 'é' },
+  { codeId: 237, character: 'í' },
+];
 export const NO_ACTION_ACTION_CODES = [0];
 export const ACTIONS: Action[] = [
   ...WSK_ACTIONS.map((a) => ({
@@ -305,6 +311,10 @@ export const ACTIONS: Action[] = [
   ...NON_KEY_ACTIONS.map((a) => ({
     ...a,
     type: ActionType.NonKey as const,
+  })),
+  ...WINDOWS_ALT_CODE_ACTIONS.map((a) => ({
+    ...a,
+    type: ActionType.WindowsAltCode as const,
   })),
 ];
 

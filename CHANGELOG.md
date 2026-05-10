@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- add 233, 237, 579 actions
+
 ## [0.0.44](https://github.com/andy23512/tangent-cc-lib/releases/tag/0.0.44)
 
 - split Space keycode in action to SpaceLeft and SpaceRight

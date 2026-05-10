@@ -410,6 +410,7 @@ export const NON_KEY_ACTION_NAME_2_KEY_NAMES_MAP: Record<
   HoldCompound: [],
   ReleaseCompound: [],
   Join: [],
+  Delay1Ms: [],
   BrightnessUp: ['brightness up', '調高亮度'],
   BrightnessDown: ['brightness down', '調低亮度'],
   PlayPause: ['play pause', '播放/暫停'],

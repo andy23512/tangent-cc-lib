@@ -10,6 +10,7 @@ export enum ActionType {
   WSK = 'wsk',
   NonWSK = 'non-wsk',
   NonKey = 'non-key',
+  WindowsAltCode = 'windows-alt-code',
 }
 
 export enum ActionVariant {
@@ -68,6 +69,7 @@ export type NonKeyActionName =
   | 'HoldCompound'
   | 'ReleaseCompound'
   | 'Join'
+  | 'Delay1Ms'
   | 'BrightnessUp'
   | 'BrightnessDown'
   | 'PlayPause'
@@ -98,7 +100,16 @@ export interface NonKeyAction extends BaseAction {
   variant?: ActionVariant;
 }
 
+export interface WindowsAltCodeAction extends BaseAction {
+  type: ActionType.WindowsAltCode;
+  character: string;
+}
+
 /**
  * Action of CharaChorder device. They can be assigned to keys on a CharaChorder device.
  */
-export type Action = WSKAction | NonWSKAction | NonKeyAction;
+export type Action =
+  | WSKAction
+  | NonWSKAction
+  | NonKeyAction
+  | WindowsAltCodeAction;
