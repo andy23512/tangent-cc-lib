@@ -13,11 +13,18 @@ export interface DeviceLayout {
     | Tuple<Tuple<number, 90>, 4>
     | Tuple<Tuple<number, 67>, 3>
     | Tuple<Tuple<number, 67>, 4>;
+  profile?: Profile;
 }
 
 export enum Layer {
-  Primary = 'A1',
-  Secondary = 'A2' /* Numeric */,
-  Tertiary = 'A3' /* Functional */,
-  Quaternary = 'A4' /* Flag */,
+  Primary = '1',
+  Secondary = '2' /* Numeric */,
+  Tertiary = '3' /* Functional */,
+  Quaternary = '4' /* Flag */,
+}
+
+export enum Profile {
+  A = 'A',
+  B = 'B',
+  C = 'C',
 }

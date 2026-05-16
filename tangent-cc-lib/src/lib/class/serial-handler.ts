@@ -11,12 +11,13 @@ import {
   tap,
   toArray,
 } from 'rxjs';
+import * as semver from 'semver';
 import {
   Chord,
   ChordInNumberListForm,
   ChordLibraryLoadStatus,
 } from '../model/chord.models.js';
-import { DeviceLayout, Layer } from '../model/device-layout.models.js';
+import { DeviceLayout, Layer, Profile } from '../model/device-layout.models.js';
 import {
   SerialCommand,
   SerialCommandArgMap,
@@ -26,6 +27,19 @@ import { parseChordActions, parsePhrase } from '../util/raw-chord.utils.js';
 import { LineBreakTransformer } from './line-break-transformer.js';
 import { SerialPortHandler } from './serial-port-handler.js';
 
+const KEY_COUNTS: Record<string, number> = {
+  ONE: 90,
+  TWO: 90,
+  LITE: 67,
+  X: 256,
+  ENGINE: 256,
+  M4G: 90,
+  M4GR: 90,
+  T4G: 7,
+  CCB: 7,
+  ZERO: 256,
+};
+
 export class SerialHandler extends EventEmitter2 {
   private port!: SerialPort;
   private readonly webSerialDataSubject = new Subject<string>();
@@ -34,8 +48,13 @@ export class SerialHandler extends EventEmitter2 {
   private reader!: ReadableStreamDefaultReader<string>;
   private readableStreamClosed!: Promise<void>;
   private writableStreamClosed!: Promise<void>;
-  public version: string | null = null;
-  public id: string | null = null;
+  public version!: string | null;
+  public id!: string | null;
+  public device!: string | null;
+  public chipset!: string | null;
+  public keyCount!: number | null;
+  public profileCount!: number | null;
+  public layerCount!: number | null;
 
   constructor(private readonly serialPortHandler: SerialPortHandler) {
     super();
@@ -58,40 +77,62 @@ export class SerialHandler extends EventEmitter2 {
     const id = await this.send(SerialCommand.Id);
     this.version = version;
     this.id = id;
+    this.device = this.id.split(' ')[1];
+    this.chipset = this.id.split(' ')[2];
+    this.keyCount = KEY_COUNTS[this.device];
+    this.profileCount =
+      semver.gte(this.version, '2.2.0-beta.4') && this.chipset !== 'M0' ? 3 : 1;
+    this.layerCount =
+      semver.gte(this.version, '2.2.0-beta.20') && this.chipset !== 'M0'
+        ? 4
+        : 3;
     return { version, id };
   }
 
-  public async loadLayout(): Promise<DeviceLayout['layout']> {
-    if (!this.id) {
-      throw new Error('Device ID is not available');
+  public async loadLayout(): Promise<
+    Partial<Record<Profile, DeviceLayout['layout']>>
+  > {
+    const layerCount = this.layerCount;
+    const profileCount = this.profileCount;
+    const keyCount = this.keyCount;
+    if (!layerCount || !profileCount || !keyCount) {
+      throw new Error('Either layerCount or profileCount not defined.');
     }
-    const device = this.id.split(' ')[1];
-    const keyCount = device === 'LITE' || device === 'X' ? 67 : 90;
     const layout = await lastValueFrom(
-      from([
-        Layer.Primary,
-        Layer.Secondary,
-        Layer.Tertiary,
-        Layer.Quaternary,
-      ]).pipe(
+      from([Profile.A, Profile.B, Profile.C].slice(0, profileCount)).pipe(
         concatMap(
-          (layer) =>
-            from(Array.from({ length: keyCount }, (_, i) => i)).pipe(
-              concatMap((keyIndex) =>
-                from(this.send(SerialCommand.GetKeyMap, layer, keyIndex)).pipe(
-                  map((data) => Number.parseInt(data, 10)),
-                ),
+          (profile) =>
+            from(
+              [
+                Layer.Primary,
+                Layer.Secondary,
+                Layer.Tertiary,
+                Layer.Quaternary,
+              ].slice(0, layerCount),
+            ).pipe(
+              concatMap(
+                (layer) =>
+                  from(Array.from({ length: keyCount }, (_, i) => i)).pipe(
+                    concatMap((keyIndex) =>
+                      from(
+                        this.send(
+                          SerialCommand.GetKeyMap,
+                          profile + layer,
+                          keyIndex,
+                        ),
+                      ).pipe(map((data) => Number.parseInt(data, 10))),
+                    ),
+                    toArray(),
+                  ) as Observable<DeviceLayout['layout'][number]>,
               ),
               toArray(),
-            ) as Observable<DeviceLayout['layout'][number]>,
+              map((layout) => [profile, layout]),
+            ) as Observable<[Profile, DeviceLayout['layout']]>,
         ),
         toArray(),
-      ) as Observable<DeviceLayout['layout']>,
+      ),
     );
-    if (layout[3]?.every((action) => action === 0)) {
-      return layout.slice(0, 3) as DeviceLayout['layout'];
-    }
-    return layout;
+    return Object.fromEntries(layout);
   }
 
   public loadChords(): Observable<

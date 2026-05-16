@@ -1,4 +1,3 @@
-import { Layer } from '../model/device-layout.models.js';
 
 // Reference: https://docs.charachorder.com/SerialAPI.html
 export enum SerialCommand {
@@ -14,5 +13,5 @@ export type SerialCommandArgMap = {
   [SerialCommand.Version]: [];
   [SerialCommand.GetChordMapCount]: [];
   [SerialCommand.GetChordMapByIndex]: [number];
-  [SerialCommand.GetKeyMap]: [Layer, number];
+  [SerialCommand.GetKeyMap]: [string, number];
 };

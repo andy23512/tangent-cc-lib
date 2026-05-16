@@ -11,7 +11,8 @@
   "private": true,
   "dependencies": {
     "eventemitter2": "^6.4.9",
-    "rxjs": "7.8.0"
+    "rxjs": "7.8.0",
+    "semver": "^7.8.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
@@ -23,6 +24,7 @@
     "@swc/core": "~1.15.5",
     "@swc/helpers": "~0.5.18",
     "@types/node": "20.19.9",
+    "@types/semver": "^7.7.1",
     "@types/w3c-web-serial": "^1.0.8",
     "@vitest/coverage-v8": "~4.1.0",
     "eslint": "^9.8.0",
