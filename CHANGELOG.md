@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- support loading layouts from all profiles
+
 ## [0.0.46](https://github.com/andy23512/tangent-cc-lib/releases/tag/0.0.46)
 
 - add isWindowsAltCode property to key label model
