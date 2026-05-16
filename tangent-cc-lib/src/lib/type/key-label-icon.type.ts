@@ -27,6 +27,7 @@ export type KeyLabelIcon =
   | 'keyboard_arrow_up'
   | 'keyboard_capslock'
   | 'keyboard_command_key'
+  | 'keyboard_option_key'
   | 'keyboard_return'
   | 'keyboard_tab'
   | 'layers'
