@@ -14,9 +14,3 @@ export interface ChordTreeNode extends Chord {
   children: ChordTreeNode[];
   ancestors: ChordTreeNode[];
 }
-
-export interface ChordLibraryLoadStatus {
-  complete: boolean;
-  loaded: number;
-  total: number;
-}

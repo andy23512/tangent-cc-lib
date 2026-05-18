@@ -28,3 +28,5 @@ export enum Profile {
   B = 'B',
   C = 'C',
 }
+
+export type ProfileLayoutMap = Partial<Record<Profile, DeviceLayout['layout']>>;

@@ -4,7 +4,6 @@ import {
   filter,
   firstValueFrom,
   from,
-  lastValueFrom,
   map,
   Observable,
   Subject,
@@ -12,12 +11,14 @@ import {
   toArray,
 } from 'rxjs';
 import * as semver from 'semver';
+import { Chord, ChordInNumberListForm } from '../model/chord.models.js';
 import {
-  Chord,
-  ChordInNumberListForm,
-  ChordLibraryLoadStatus,
-} from '../model/chord.models.js';
-import { DeviceLayout, Layer, Profile } from '../model/device-layout.models.js';
+  DeviceLayout,
+  Layer,
+  Profile,
+  ProfileLayoutMap,
+} from '../model/device-layout.models.js';
+import { SerialLoadStatus } from '../tangent-cc-lib.js';
 import {
   SerialCommand,
   SerialCommandArgMap,
@@ -89,54 +90,73 @@ export class SerialHandler extends EventEmitter2 {
     return { version, id };
   }
 
-  public async loadLayout(): Promise<
-    Partial<Record<Profile, DeviceLayout['layout']>>
+  public loadProfileLayoutMap(): Observable<
+    SerialLoadStatus & { profileLayoutMap?: ProfileLayoutMap }
   > {
-    const layerCount = this.layerCount;
-    const profileCount = this.profileCount;
-    const keyCount = this.keyCount;
-    if (!layerCount || !profileCount || !keyCount) {
-      throw new Error('Either layerCount or profileCount not defined.');
-    }
-    const layout = await lastValueFrom(
-      from([Profile.A, Profile.B, Profile.C].slice(0, profileCount)).pipe(
-        concatMap(
-          (profile) =>
-            from(
-              [
-                Layer.Primary,
-                Layer.Secondary,
-                Layer.Tertiary,
-                Layer.Quaternary,
-              ].slice(0, layerCount),
-            ).pipe(
-              concatMap(
-                (layer) =>
-                  from(Array.from({ length: keyCount }, (_, i) => i)).pipe(
-                    concatMap((keyIndex) =>
-                      from(
-                        this.send(
-                          SerialCommand.GetKeyMap,
-                          profile + layer,
-                          keyIndex,
+    return new Observable((observer) => {
+      const layerCount = this.layerCount;
+      const profileCount = this.profileCount;
+      const keyCount = this.keyCount;
+      if (!layerCount || !profileCount || !keyCount) {
+        throw new Error('Either layerCount or profileCount not defined.');
+      }
+      const total = keyCount * profileCount * layerCount;
+      const result = {
+        complete: false,
+        loaded: 0,
+        total,
+      };
+      observer.next(result);
+      from([Profile.A, Profile.B, Profile.C].slice(0, profileCount))
+        .pipe(
+          concatMap(
+            (profile) =>
+              from(
+                [
+                  Layer.Primary,
+                  Layer.Secondary,
+                  Layer.Tertiary,
+                  Layer.Quaternary,
+                ].slice(0, layerCount),
+              ).pipe(
+                concatMap(
+                  (layer) =>
+                    from(Array.from({ length: keyCount }, (_, i) => i)).pipe(
+                      concatMap((keyIndex) =>
+                        from(
+                          this.send(
+                            SerialCommand.GetKeyMap,
+                            profile + layer,
+                            keyIndex,
+                          ),
+                        ).pipe(
+                          map((data) => Number.parseInt(data, 10)),
+                          tap(() => {
+                            result.loaded++;
+                            observer.next({ ...result });
+                          }),
                         ),
-                      ).pipe(map((data) => Number.parseInt(data, 10))),
-                    ),
-                    toArray(),
-                  ) as Observable<DeviceLayout['layout'][number]>,
-              ),
-              toArray(),
-              map((layout) => [profile, layout]),
-            ) as Observable<[Profile, DeviceLayout['layout']]>,
-        ),
-        toArray(),
-      ),
-    );
-    return Object.fromEntries(layout);
+                      ),
+                      toArray(),
+                    ) as Observable<DeviceLayout['layout'][number]>,
+                ),
+                toArray(),
+                map((layout) => [profile, layout]),
+              ) as Observable<[Profile, DeviceLayout['layout']]>,
+          ),
+          toArray(),
+          map((d) => Object.fromEntries(d)),
+        )
+        .subscribe((profileLayoutMap) => {
+          result.complete = true;
+          observer.next({ ...result, profileLayoutMap });
+          observer.complete();
+        });
+    });
   }
 
   public loadChords(): Observable<
-    ChordLibraryLoadStatus & {
+    SerialLoadStatus & {
       chords?: Chord[];
     }
   > {
@@ -168,7 +188,7 @@ export class SerialHandler extends EventEmitter2 {
             ),
             tap(() => {
               result.loaded++;
-              observer.next(result);
+              observer.next({ ...result });
             }),
             toArray(),
           )

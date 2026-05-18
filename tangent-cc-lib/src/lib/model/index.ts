@@ -8,4 +8,5 @@ export * from './key-label.models.js';
 export * from './keyboard-layout.models.js';
 export * from './language-tree.models.js';
 export * from './layout.models.js';
+export * from './serial-load-status.models.js';
 
