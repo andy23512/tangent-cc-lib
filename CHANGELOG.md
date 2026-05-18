@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [0.0.49](https://github.com/andy23512/tangent-cc-lib/releases/tag/0.0.49)
 
 - rename loadLayout method to loadProfileLayoutMap
 - change return value of loadProfileLayoutMap to observable and provide loading progress
