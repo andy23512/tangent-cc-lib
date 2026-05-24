@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [0.0.50](https://github.com/andy23512/tangent-cc-lib/releases/tag/0.0.50)
 
 - add actionAndPhraseHash property to chord object
 
