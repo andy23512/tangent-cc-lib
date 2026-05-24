@@ -35,6 +35,7 @@ export function convertChordInNumberListFormToChord([
     input: getInputFromChordAction(action),
     actions: action,
     output: phrase,
+    actionAndPhraseHash: action.join(',') + '|' + phrase.join(','),
   };
 }
 

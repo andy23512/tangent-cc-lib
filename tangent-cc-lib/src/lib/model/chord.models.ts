@@ -7,6 +7,7 @@ export interface Chord {
   actions: number[];
   output: number[];
   parentId: number | null; // parentHash
+  actionAndPhraseHash: string;
 }
 
 export interface ChordTreeNode extends Chord {

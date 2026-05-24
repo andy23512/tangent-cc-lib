@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- add actionAndPhraseHash property to chord object
+
 ## [0.0.49](https://github.com/andy23512/tangent-cc-lib/releases/tag/0.0.49)
 
 - rename loadLayout method to loadProfileLayoutMap
