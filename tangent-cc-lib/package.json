@@ -30,11 +30,12 @@
     "!**/*.tsbuildinfo"
   ],
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "web-serial-polyfill": "^1.0.15"
   },
   "peerDependencies": {
-    "rxjs": "~7.8.0",
     "eventemitter2": "~6.4.9",
+    "rxjs": "~7.8.0",
     "semver": "^7.8.0"
   }
 }

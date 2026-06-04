@@ -2,13 +2,30 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mockRequestPort = vi.fn();
 const mockGetPorts = vi.fn();
+const mockWebUsbRequestPort = vi.fn();
+const mockWebUsbGetPorts = vi.fn();
 
-vi.stubGlobal('navigator', {
+vi.mock('web-serial-polyfill', () => ({
   serial: {
-    requestPort: mockRequestPort,
-    getPorts: mockGetPorts,
+    requestPort: mockWebUsbRequestPort,
+    getPorts: mockWebUsbGetPorts,
   },
-});
+}));
+
+function stubNavigator(options?: { serial?: boolean; usb?: boolean }) {
+  const { serial = true, usb = false } = options ?? {};
+  vi.stubGlobal('navigator', {
+    ...(serial
+      ? {
+          serial: {
+            requestPort: mockRequestPort,
+            getPorts: mockGetPorts,
+          },
+        }
+      : {}),
+    ...(usb ? { usb: {} } : {}),
+  });
+}
 
 function makePort(usbVendorId: number, usbProductId: number): SerialPort {
   return {
@@ -19,6 +36,7 @@ function makePort(usbVendorId: number, usbProductId: number): SerialPort {
 describe('SerialPortHandler', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    stubNavigator({ serial: true, usb: false });
   });
 
   describe('getPort()', () => {
@@ -76,6 +94,30 @@ describe('SerialPortHandler', () => {
       expect(mockRequestPort).toHaveBeenCalledOnce();
       expect(result).toBe(mockPort);
     });
+
+    it('falls back to WebUSB polyfill when Web Serial is unavailable', async () => {
+      stubNavigator({ serial: false, usb: true });
+      const { SerialPortHandler } = await import('./serial-port-handler.js');
+      const mockPort = makePort(9114, 32783);
+      mockWebUsbRequestPort.mockResolvedValue(mockPort);
+
+      const handler = new SerialPortHandler(false);
+      const result = await handler.getPort();
+
+      expect(mockWebUsbRequestPort).toHaveBeenCalledOnce();
+      expect(mockRequestPort).not.toHaveBeenCalled();
+      expect(result).toBe(mockPort);
+    });
+
+    it('throws when neither Web Serial nor WebUSB is available', async () => {
+      stubNavigator({ serial: false, usb: false });
+      const { SerialPortHandler } = await import('./serial-port-handler.js');
+      const handler = new SerialPortHandler(false);
+
+      await expect(handler.getPort()).rejects.toThrow(
+        'This browser does not support Web Serial or WebUSB.',
+      );
+    });
   });
 
   describe('getViablePorts() filtering', () => {
@@ -85,7 +127,6 @@ describe('SerialPortHandler', () => {
       const unknownPort = makePort(0xdead, 0xbeef);
       mockGetPorts.mockResolvedValue([knownPort, unknownPort]);
 
-      const handler = new SerialPortHandler(true);
       // With 2 viable candidates we fall through to requestPort; use a custom
       // devicePorts map with two entries so exactly two known ports trigger
       // fallback, letting us inspect the filter behaviour via the path that

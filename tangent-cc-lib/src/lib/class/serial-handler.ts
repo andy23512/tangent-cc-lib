@@ -26,7 +26,10 @@ import {
 import { convertChordInNumberListFormToChord } from '../util/chord.utils.js';
 import { parseChordActions, parsePhrase } from '../util/raw-chord.utils.js';
 import { LineBreakTransformer } from './line-break-transformer.js';
-import { SerialPortHandler } from './serial-port-handler.js';
+import {
+  SerialPortHandler,
+  type SupportedSerialPort,
+} from './serial-port-handler.js';
 
 const KEY_COUNTS: Record<string, number> = {
   ONE: 90,
@@ -42,7 +45,7 @@ const KEY_COUNTS: Record<string, number> = {
 };
 
 export class SerialHandler extends EventEmitter2 {
-  private port!: SerialPort;
+  private port!: SupportedSerialPort;
   private readonly webSerialDataSubject = new Subject<string>();
   private readonly webSerialData$ = this.webSerialDataSubject.asObservable();
   private writer!: WritableStreamDefaultWriter<string>;
