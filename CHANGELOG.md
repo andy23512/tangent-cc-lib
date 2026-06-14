@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [0.0.51](https://github.com/andy23512/tangent-cc-lib/releases/tag/0.0.51)
 
 - add isDynamicLibraryChord flag to chord model
 - support WebUSB fallback
