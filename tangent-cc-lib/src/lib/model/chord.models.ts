@@ -8,6 +8,7 @@ export interface Chord {
   output: number[];
   parentId: number | null; // parentHash
   actionAndPhraseHash: string;
+  isDynamicLibraryChord: boolean;
 }
 
 export interface ChordTreeNode extends Chord {

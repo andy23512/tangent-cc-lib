@@ -36,6 +36,7 @@ export function convertChordInNumberListFormToChord([
     actions: action,
     output: phrase,
     actionAndPhraseHash: action.join(',') + '|' + phrase.join(','),
+    isDynamicLibraryChord: phrase.includes(558),
   };
 }
 
