@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [0.0.53](https://github.com/andy23512/tangent-cc-lib/releases/tag/0.0.53)
 
 - convertKeyboardLayoutToCharacterKeyCodeMap keep all mapping to a character
 
