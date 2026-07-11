@@ -26,12 +26,12 @@ describe('convertKeyboardLayoutToCharacterKeyCodeMap', () => {
 
     expect(convertKeyboardLayoutToCharacterKeyCodeMap(keyboardLayout)).toEqual(
       new Map([
-        [' ', { keyCode: 'Space', shiftKey: false, altGraphKey: false }],
-        ['a', { keyCode: 'KeyA', shiftKey: false, altGraphKey: false }],
-        ['A', { keyCode: 'KeyA', shiftKey: true, altGraphKey: false }],
-        ['@', { keyCode: 'KeyA', shiftKey: false, altGraphKey: true }],
-        ['Å', { keyCode: 'KeyA', shiftKey: true, altGraphKey: true }],
-        ['b', { keyCode: 'KeyB', shiftKey: false, altGraphKey: false }],
+        [' ', [{ keyCode: 'Space', shiftKey: false, altGraphKey: false }]],
+        ['a', [{ keyCode: 'KeyA', shiftKey: false, altGraphKey: false }]],
+        ['A', [{ keyCode: 'KeyA', shiftKey: true, altGraphKey: false }]],
+        ['@', [{ keyCode: 'KeyA', shiftKey: false, altGraphKey: true }]],
+        ['Å', [{ keyCode: 'KeyA', shiftKey: true, altGraphKey: true }]],
+        ['b', [{ keyCode: 'KeyB', shiftKey: false, altGraphKey: false }]],
       ]),
     );
   });
@@ -52,13 +52,13 @@ describe('convertKeyboardLayoutToCharacterKeyCodeMap', () => {
 
     expect(convertKeyboardLayoutToCharacterKeyCodeMap(keyboardLayout)).toEqual(
       new Map([
-        [' ', { keyCode: 'Space', shiftKey: false, altGraphKey: false }],
-        ['B', { keyCode: 'KeyB', shiftKey: true, altGraphKey: false }],
+        [' ', [{ keyCode: 'Space', shiftKey: false, altGraphKey: false }]],
+        ['B', [{ keyCode: 'KeyB', shiftKey: true, altGraphKey: false }]],
       ]),
     );
   });
 
-  it('keeps the last mapping when the same character appears multiple times', () => {
+  it('keeps all mapping when the same character appears multiple times', () => {
     const keyboardLayout: KeyboardLayout = {
       id: 'test-layout',
       name: 'Test Layout',
@@ -75,8 +75,14 @@ describe('convertKeyboardLayoutToCharacterKeyCodeMap', () => {
 
     expect(convertKeyboardLayoutToCharacterKeyCodeMap(keyboardLayout)).toEqual(
       new Map([
-        [' ', { keyCode: 'Space', shiftKey: false, altGraphKey: false }],
-        ['x', { keyCode: 'KeyB', shiftKey: false, altGraphKey: false }],
+        [' ', [{ keyCode: 'Space', shiftKey: false, altGraphKey: false }]],
+        [
+          'x',
+          [
+            { keyCode: 'KeyA', shiftKey: false, altGraphKey: false },
+            { keyCode: 'KeyB', shiftKey: false, altGraphKey: false },
+          ],
+        ],
       ]),
     );
   });

@@ -31,7 +31,7 @@ export interface KeyboardLayout {
 /**
  * Map from character to key code (with shift key or alt graph information)
  */
-export type CharacterKeyCodeMap = Map<string, CharacterKeyCode>;
+export type CharacterKeyCodeMap = Map<string, CharacterKeyCode[]>;
 
 /**
  * Data for a key combination that can type out a character

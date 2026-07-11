@@ -25,26 +25,26 @@ export function convertKeyboardLayoutToCharacterKeyCodeMap(
     >
   ).concat([['Space', { unmodified: { type: 'text', value: ' ' } }]]);
 
-  return new Map(
-    entries.flatMap(([keyCode, layoutKey]) => {
-      if (!layoutKey) {
-        return [];
-      }
-      return Object.entries(layoutKey)
-        .filter(([, output]) => output?.type === 'text')
-        .map(
-          ([modifier, output]) =>
-            [
-              output.value,
-              {
-                keyCode,
-                shiftKey: hasShift.has(modifier),
-                altGraphKey: hasAltGraph.has(modifier),
-              },
-            ] as const,
-        );
-    }),
-  );
+  const resultMap = new Map<string, CharacterKeyCode[]>();
+
+  entries.forEach(([keyCode, layoutKey]) => {
+    if (!layoutKey) {
+      return;
+    }
+    Object.entries(layoutKey)
+      .filter(([, output]) => output?.type === 'text')
+      .forEach(([modifier, output]) => {
+        resultMap.set(output.value, [
+          ...(resultMap.get(output.value) || []),
+          {
+            keyCode,
+            shiftKey: hasShift.has(modifier),
+            altGraphKey: hasAltGraph.has(modifier),
+          },
+        ]);
+      });
+  });
+  return resultMap;
 }
 
 export function getCharacterActionCodesFromCharacterKeyCode({
