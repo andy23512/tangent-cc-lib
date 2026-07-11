@@ -139,6 +139,7 @@ export const NON_WSK_ACTIONS: Omit<NonWSKAction, 'type'>[] = [
   { codeId: 325, keyCode: 'F12' },
   { codeId: 326, keyCode: 'PrintScreen' },
   { codeId: 127, keyCode: 'Delete' },
+  { codeId: 327, keyCode: 'ScrollLock' },
   { codeId: 329, keyCode: 'Insert' },
   { codeId: 330, keyCode: 'Home' },
   { codeId: 331, keyCode: 'PageUp' },

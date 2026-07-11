@@ -89,6 +89,7 @@ export const NON_WSK_CODE_2_KEY_NAMES_MAP: Record<NonWSKCode, string[]> = {
   F23: ['f23', '功能鍵 23'],
   F24: ['f24', '功能鍵 24'],
   PrintScreen: ['print screen', 'prtsc', 'prtscn', 'prntscrn', '列印螢幕鍵'],
+  ScrollLock: ['scroll lock', 'scrlk', '滾動鎖定鍵'],
   Delete: ['del', 'delete', 'delete forward', '刪除鍵'],
   ArrowDown: ['down arrow', '向下鍵'],
   ArrowLeft: ['left arrow', '向左鍵'],

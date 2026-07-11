@@ -97,6 +97,7 @@ export type NonWSKCode =
   | 'F23'
   | 'F24'
   | 'PrintScreen'
+  | 'ScrollLock'
   | 'Delete'
   | 'ArrowDown'
   | 'ArrowLeft'

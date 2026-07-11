@@ -154,6 +154,11 @@ export const NON_WSK_CODE_2_RAW_KEY_LABEL_MAP: Record<NonWSKCode, RawKeyLabel> =
       c: 'screenshot_monitor',
       title: 'key-label.print-screen',
     },
+    ScrollLock: {
+      type: KeyLabelType.String,
+      c: 'SCRLK',
+      title: 'key-label.scroll-lock',
+    },
     Delete: { type: KeyLabelType.String, c: 'DEL', title: 'key-label.delete' },
     ArrowDown: {
       type: KeyLabelType.Icon,
