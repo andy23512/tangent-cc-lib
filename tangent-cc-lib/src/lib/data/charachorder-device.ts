@@ -32,6 +32,11 @@ export const CHARACHORDER_3D_INPUT_DEVICES: CharaChorderDevice[] = [
   CharaChorderDevice.M4GS3,
 ];
 
+export const CHARACHORDER_LITE_DEVICES: CharaChorderDevice[] = [
+  CharaChorderDevice.LiteS2,
+  CharaChorderDevice.LiteM0,
+];
+
 export const CHARACHORDER_DEVICE_PORTS = new Map<
   CharaChorderDevice,
   SerialPortFilter
@@ -58,6 +63,16 @@ export const CHARACHORDER_3D_INPUT_DEVICE_PORTS: Map<
   SerialPortFilter
 > = new Map(
   CHARACHORDER_3D_INPUT_DEVICES.map((device) => [
+    device,
+    CHARACHORDER_DEVICE_PORTS.get(device) as SerialPortFilter,
+  ]),
+);
+
+export const CHARACHORDER_LITE_DEVICE_PORTS: Map<
+  CharaChorderDevice,
+  SerialPortFilter
+> = new Map(
+  CHARACHORDER_LITE_DEVICES.map((device) => [
     device,
     CHARACHORDER_DEVICE_PORTS.get(device) as SerialPortFilter,
   ]),
