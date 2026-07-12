@@ -7,6 +7,7 @@ export * from './key-combination.models.js';
 export * from './key-label.models.js';
 export * from './keyboard-layout.models.js';
 export * from './language-tree.models.js';
+export * from './layout-type.models.js';
 export * from './layout.models.js';
 export * from './serial-load-status.models.js';
 

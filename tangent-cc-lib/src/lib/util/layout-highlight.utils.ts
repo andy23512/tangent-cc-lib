@@ -1,15 +1,16 @@
 import { Layer } from '../model/device-layout.models.js';
 import {
-  HighlightSetting,
-  PreferSides,
+    HighlightSetting,
+    PreferSides,
 } from '../model/highlight-setting.models.js';
 import {
-  HighlightKeyCombination,
-  KeyCombination,
+    HighlightKeyCombination,
+    KeyCombination,
 } from '../model/key-combination.models.js';
+import { LayoutType } from '../model/layout-type.models.js';
 import {
-  LayerShiftPositionCodeMap,
-  ModifierKeyPositionCodeMap,
+    LayerShiftPositionCodeMap,
+    ModifierKeyPositionCodeMap,
 } from './layout-modifier-map.utils.js';
 import { isPositionAtSide, meetPreferSides } from './layout-side.utils.js';
 
@@ -19,6 +20,7 @@ function buildShiftWithLayerModifierCombinations(
   layerModifierPositionCodes: number[],
   preferCharacterKeySide: 'left' | 'right',
   preferShiftSide: 'left' | 'right',
+  layoutType: LayoutType,
 ): HighlightKeyCombination[] {
   const result: HighlightKeyCombination[] = [];
 
@@ -29,14 +31,21 @@ function buildShiftWithLayerModifierCombinations(
         isPositionAtSide(
           keyCombination.characterKeyPositionCode,
           preferCharacterKeySide,
+          layoutType,
         )
       ) {
         score += 1;
       }
-      if (isPositionAtSide(shiftPositionCode, preferShiftSide)) {
+      if (isPositionAtSide(shiftPositionCode, preferShiftSide, layoutType)) {
         score += 1;
       }
-      if (!isPositionAtSide(layerModifierPositionCode, preferShiftSide)) {
+      if (
+        !isPositionAtSide(
+          layerModifierPositionCode,
+          preferShiftSide,
+          layoutType,
+        )
+      ) {
         score += 1;
       }
 
@@ -60,6 +69,7 @@ function buildLayerModifierCombinations(
   modifierPositionCodes: number[],
   preferModifierSide: 'left' | 'right',
   preferSides: PreferSides,
+  layoutType: LayoutType,
 ): HighlightKeyCombination[] {
   const result: HighlightKeyCombination[] = [];
 
@@ -70,11 +80,14 @@ function buildLayerModifierCombinations(
         keyCombination.characterKeyPositionCode,
         modifierPositionCode,
         preferSides,
+        layoutType,
       )
     ) {
       score += 2;
     }
-    if (isPositionAtSide(modifierPositionCode, preferModifierSide)) {
+    if (
+      isPositionAtSide(modifierPositionCode, preferModifierSide, layoutType)
+    ) {
       score += 1;
     }
 
@@ -96,6 +109,7 @@ export function getHighlightKeyCombinationFromKeyCombinations(
   layerShiftPositionCodeMap: LayerShiftPositionCodeMap,
   modifierKeyPositionCodeMap: ModifierKeyPositionCodeMap,
   highlightSetting: HighlightSetting,
+  layoutType: LayoutType = '3d',
 ) {
   return keyCombinations
     .flatMap((k) => {
@@ -113,6 +127,7 @@ export function getHighlightKeyCombinationFromKeyCombinations(
                 layerShiftPositionCodeMap.numShift,
                 preferCharacterKeySide,
                 preferShiftSide,
+                layoutType,
               );
             }
             break;
@@ -127,6 +142,7 @@ export function getHighlightKeyCombinationFromKeyCombinations(
                 layerShiftPositionCodeMap.fnShift,
                 preferCharacterKeySide,
                 preferShiftSide,
+                layoutType,
               );
             }
             break;
@@ -141,6 +157,7 @@ export function getHighlightKeyCombinationFromKeyCombinations(
                 layerShiftPositionCodeMap.flagShift,
                 preferCharacterKeySide,
                 preferShiftSide,
+                layoutType,
               );
             }
             break;
@@ -154,6 +171,7 @@ export function getHighlightKeyCombinationFromKeyCombinations(
                 modifierKeyPositionCodeMap.shift[Layer.Primary],
                 preferShiftSide,
                 preferSides,
+                layoutType,
               );
             }
             break;
@@ -169,6 +187,7 @@ export function getHighlightKeyCombinationFromKeyCombinations(
               layerShiftPositionCodeMap.numShift,
               preferNumShiftSide,
               preferSides,
+              layoutType,
             );
             break;
           }
@@ -180,6 +199,7 @@ export function getHighlightKeyCombinationFromKeyCombinations(
               layerShiftPositionCodeMap.fnShift,
               preferFnShiftSide,
               preferSides,
+              layoutType,
             );
             break;
           }
@@ -191,6 +211,7 @@ export function getHighlightKeyCombinationFromKeyCombinations(
               layerShiftPositionCodeMap.flagShift,
               preferFlagShiftSide,
               preferSides,
+              layoutType,
             );
             break;
           }

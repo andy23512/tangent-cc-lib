@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- handle highlight logic for lite
+
 ## [0.0.54](https://github.com/andy23512/tangent-cc-lib/releases/tag/0.0.54)
 
 - add scroll lock action
