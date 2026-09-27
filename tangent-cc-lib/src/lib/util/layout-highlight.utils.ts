@@ -1,18 +1,68 @@
 import { Layer } from '../model/device-layout.models.js';
 import {
-    HighlightSetting,
-    PreferSides,
+  HighlightSetting,
+  PreferKeySide,
+  PreferSides,
 } from '../model/highlight-setting.models.js';
 import {
-    HighlightKeyCombination,
-    KeyCombination,
+  HighlightKeyCombination,
+  KeyCombination,
 } from '../model/key-combination.models.js';
 import { LayoutType } from '../model/layout-type.models.js';
 import {
-    LayerShiftPositionCodeMap,
-    ModifierKeyPositionCodeMap,
+  LayerShiftPositionCodeMap,
+  ModifierKeyPositionCodeMap,
 } from './layout-modifier-map.utils.js';
 import { isPositionAtSide, meetPreferSides } from './layout-side.utils.js';
+
+type ShiftedLayer = Layer.Secondary | Layer.Tertiary | Layer.Quaternary;
+
+/*
+ * Secondary/Tertiary/Quaternary layers behave identically apart from which
+ * fields of `layerShiftPositionCodeMap`/`highlightSetting` they read.
+ */
+function getShiftedLayerConfig(
+  layer: ShiftedLayer,
+  layerShiftPositionCodeMap: LayerShiftPositionCodeMap,
+  highlightSetting: HighlightSetting,
+): {
+  layerModifierPositionCodes: number[];
+  shiftAndLayerSetting: {
+    preferShiftSide: PreferKeySide;
+    preferCharacterKeySide: PreferKeySide;
+  };
+  layerSetting: { preferSides: PreferSides; preferLayerSide: PreferKeySide };
+} {
+  switch (layer) {
+    case Layer.Secondary:
+      return {
+        layerModifierPositionCodes: layerShiftPositionCodeMap.numShift,
+        shiftAndLayerSetting: highlightSetting.shiftAndNumShiftLayer,
+        layerSetting: {
+          preferSides: highlightSetting.numShiftLayer.preferSides,
+          preferLayerSide: highlightSetting.numShiftLayer.preferNumShiftSide,
+        },
+      };
+    case Layer.Tertiary:
+      return {
+        layerModifierPositionCodes: layerShiftPositionCodeMap.fnShift,
+        shiftAndLayerSetting: highlightSetting.shiftAndFnShiftLayer,
+        layerSetting: {
+          preferSides: highlightSetting.fnShiftLayer.preferSides,
+          preferLayerSide: highlightSetting.fnShiftLayer.preferFnShiftSide,
+        },
+      };
+    case Layer.Quaternary:
+      return {
+        layerModifierPositionCodes: layerShiftPositionCodeMap.flagShift,
+        shiftAndLayerSetting: highlightSetting.shiftAndFlagShiftLayer,
+        layerSetting: {
+          preferSides: highlightSetting.flagShiftLayer.preferSides,
+          preferLayerSide: highlightSetting.flagShiftLayer.preferFlagShiftSide,
+        },
+      };
+  }
+}
 
 function buildShiftWithLayerModifierCombinations(
   keyCombination: KeyCombination,
@@ -57,8 +107,34 @@ function buildShiftWithLayerModifierCombinations(
           layerModifierPositionCode,
         ],
         score,
+        useLayerLock: false,
       });
     }
+
+    // handle lock
+    let score = 0;
+    if (
+      isPositionAtSide(
+        keyCombination.characterKeyPositionCode,
+        preferCharacterKeySide,
+        layoutType,
+      )
+    ) {
+      score += 1;
+    }
+    if (isPositionAtSide(shiftPositionCode, preferShiftSide, layoutType)) {
+      score += 1;
+    }
+
+    result.push({
+      ...keyCombination,
+      positionCodes: [
+        keyCombination.characterKeyPositionCode,
+        shiftPositionCode,
+      ],
+      score,
+      useLayerLock: true,
+    });
   }
 
   return result;
@@ -98,8 +174,34 @@ function buildLayerModifierCombinations(
         modifierPositionCode,
       ],
       score,
+      useLayerLock: false,
     });
   }
+
+  // handle lock
+  let score = 0;
+  const preferKeySide =
+    preferSides === 'both'
+      ? preferModifierSide === 'left'
+        ? 'right'
+        : 'left'
+      : preferModifierSide;
+  if (
+    isPositionAtSide(
+      keyCombination.characterKeyPositionCode,
+      preferKeySide,
+      layoutType,
+    )
+  ) {
+    score += 1;
+  }
+
+  result.push({
+    ...keyCombination,
+    positionCodes: [keyCombination.characterKeyPositionCode],
+    score: score,
+    useLayerLock: true,
+  });
 
   return result;
 }
@@ -115,114 +217,56 @@ export function getHighlightKeyCombinationFromKeyCombinations(
     .flatMap((k) => {
       let result: HighlightKeyCombination[] = [];
 
-      if (k.shiftKey) {
-        switch (k.layer) {
-          case Layer.Secondary: {
-            const { preferCharacterKeySide, preferShiftSide } =
-              highlightSetting.shiftAndNumShiftLayer;
-            if (modifierKeyPositionCodeMap.shift[Layer.Secondary].length > 0) {
-              result = buildShiftWithLayerModifierCombinations(
-                k,
-                modifierKeyPositionCodeMap.shift[Layer.Secondary],
-                layerShiftPositionCodeMap.numShift,
-                preferCharacterKeySide,
-                preferShiftSide,
-                layoutType,
-              );
-            }
-            break;
+      if (k.layer === Layer.Primary) {
+        if (k.shiftKey) {
+          const { preferShiftSide, preferSides } = highlightSetting.shiftLayer;
+          if (modifierKeyPositionCodeMap.shift[Layer.Primary].length > 0) {
+            result = buildLayerModifierCombinations(
+              k,
+              modifierKeyPositionCodeMap.shift[Layer.Primary],
+              preferShiftSide,
+              preferSides,
+              layoutType,
+            );
           }
-          case Layer.Tertiary: {
-            const { preferCharacterKeySide, preferShiftSide } =
-              highlightSetting.shiftAndFnShiftLayer;
-            if (modifierKeyPositionCodeMap.shift[Layer.Tertiary].length > 0) {
-              result = buildShiftWithLayerModifierCombinations(
-                k,
-                modifierKeyPositionCodeMap.shift[Layer.Tertiary],
-                layerShiftPositionCodeMap.fnShift,
-                preferCharacterKeySide,
-                preferShiftSide,
-                layoutType,
-              );
-            }
-            break;
-          }
-          case Layer.Quaternary: {
-            const { preferCharacterKeySide, preferShiftSide } =
-              highlightSetting.shiftAndFlagShiftLayer;
-            if (modifierKeyPositionCodeMap.shift[Layer.Quaternary].length > 0) {
-              result = buildShiftWithLayerModifierCombinations(
-                k,
-                modifierKeyPositionCodeMap.shift[Layer.Quaternary],
-                layerShiftPositionCodeMap.flagShift,
-                preferCharacterKeySide,
-                preferShiftSide,
-                layoutType,
-              );
-            }
-            break;
-          }
-          default: {
-            const { preferShiftSide, preferSides } =
-              highlightSetting.shiftLayer;
-            if (modifierKeyPositionCodeMap.shift[Layer.Primary].length > 0) {
-              result = buildLayerModifierCombinations(
-                k,
-                modifierKeyPositionCodeMap.shift[Layer.Primary],
-                preferShiftSide,
-                preferSides,
-                layoutType,
-              );
-            }
-            break;
-          }
+        } else {
+          result = [
+            {
+              ...k,
+              positionCodes: [k.characterKeyPositionCode],
+              score: 0,
+              useLayerLock: false,
+            },
+          ];
         }
       } else {
-        switch (k.layer) {
-          case Layer.Secondary: {
-            const { preferNumShiftSide, preferSides } =
-              highlightSetting.numShiftLayer;
-            result = buildLayerModifierCombinations(
-              k,
-              layerShiftPositionCodeMap.numShift,
-              preferNumShiftSide,
-              preferSides,
-              layoutType,
-            );
-            break;
-          }
-          case Layer.Tertiary: {
-            const { preferFnShiftSide, preferSides } =
-              highlightSetting.fnShiftLayer;
-            result = buildLayerModifierCombinations(
-              k,
-              layerShiftPositionCodeMap.fnShift,
-              preferFnShiftSide,
-              preferSides,
-              layoutType,
-            );
-            break;
-          }
-          case Layer.Quaternary: {
-            const { preferFlagShiftSide, preferSides } =
-              highlightSetting.flagShiftLayer;
-            result = buildLayerModifierCombinations(
-              k,
-              layerShiftPositionCodeMap.flagShift,
-              preferFlagShiftSide,
-              preferSides,
-              layoutType,
-            );
-            break;
-          }
-          default:
-            result = [
-              {
-                ...k,
-                positionCodes: [k.characterKeyPositionCode],
-                score: 0,
-              },
-            ];
+        const {
+          layerModifierPositionCodes,
+          shiftAndLayerSetting,
+          layerSetting,
+        } = getShiftedLayerConfig(
+          k.layer,
+          layerShiftPositionCodeMap,
+          highlightSetting,
+        );
+
+        if (k.shiftKey) {
+          result = buildShiftWithLayerModifierCombinations(
+            k,
+            modifierKeyPositionCodeMap.shift[k.layer],
+            layerModifierPositionCodes,
+            shiftAndLayerSetting.preferCharacterKeySide,
+            shiftAndLayerSetting.preferShiftSide,
+            layoutType,
+          );
+        } else {
+          result = buildLayerModifierCombinations(
+            k,
+            layerModifierPositionCodes,
+            layerSetting.preferLayerSide,
+            layerSetting.preferSides,
+            layoutType,
+          );
         }
       }
 
@@ -241,7 +285,13 @@ export function getHighlightKeyCombinationFromKeyCombinations(
         }));
     })
     .sort((a, b) => {
-      if (a.positionCodes.length !== b.positionCodes.length) {
+      if (a.useLayerLock !== b.useLayerLock) {
+        return a.useLayerLock ? 1 : -1;
+      }
+      if (
+        a.useLayerLock === b.useLayerLock &&
+        a.positionCodes.length !== b.positionCodes.length
+      ) {
         return a.positionCodes.length - b.positionCodes.length;
       }
       if (a.layer !== b.layer) {

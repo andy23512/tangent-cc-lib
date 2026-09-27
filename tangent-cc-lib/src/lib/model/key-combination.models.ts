@@ -16,4 +16,5 @@ export interface KeyCombination {
 export interface HighlightKeyCombination extends KeyCombination {
   positionCodes: number[];
   score: number;
+  useLayerLock: boolean;
 }
