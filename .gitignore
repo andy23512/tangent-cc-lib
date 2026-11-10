@@ -44,3 +44,5 @@ Thumbs.db
 .claude/settings.local.json
 
 vitest.config.*.timestamp*
+# Yarn (project uses Yarn 4 with nodeLinker: node-modules)
+.yarn/

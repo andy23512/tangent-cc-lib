@@ -9,6 +9,7 @@
     "build-and-publish": "npm run build && cd tangent-cc-lib/dist && npm publish --access public"
   },
   "private": true,
+  "packageManager": "yarn@4.18.1",
   "dependencies": {
     "eventemitter2": "^6.4.9",
     "rxjs": "^7.8.0",
