@@ -82,8 +82,8 @@ describe('modifier position utilities', () => {
     expect(getFlagShiftKeyPositionCodes(deviceLayout)).toEqual([4]);
   });
 
-  it('getModifierKeyPositionCodeMap returns combined modifier positions', async () => {
-    const { getLayerShiftPositionCodeMap: getModifierKeyPositionCodeMap } =
+  it('getLayerShiftPositionCodeMap returns num/fn/flag shift positions', async () => {
+    const { getLayerShiftPositionCodeMap } =
       await loadModuleWithActionConstants();
     const deviceLayout = {
       layout: [
@@ -94,12 +94,39 @@ describe('modifier position utilities', () => {
       ],
     } as any;
 
-    expect(getModifierKeyPositionCodeMap(deviceLayout)).toEqual({
-      shift: [2, 2, 2, 3],
+    expect(getLayerShiftPositionCodeMap(deviceLayout)).toEqual({
       numShift: [1, 3],
       fnShift: [0],
       flagShift: [4],
-      altGraph: [1],
+    });
+  });
+
+  it('getModifierKeyPositionCodeMap returns shift and altGraph positions per layer', async () => {
+    const { getModifierKeyPositionCodeMap } =
+      await loadModuleWithActionConstants();
+    const { Layer } = await import('../model/device-layout.models.js');
+    const deviceLayout = {
+      layout: [
+        ['FN1', 'NUM1', 'SHIFT1', 'NUM2', 'FLAG1'],
+        ['FN2', 'NUM2', 'SHIFT2', 'NUM1', 'FLAG2'],
+        ['FN2', 'X', 'SHIFT1', 'Y', 'FLAG1'],
+        ['FLAG2', 'ALT', 'Q', 'SHIFT2', 'FLAG1'],
+      ],
+    } as any;
+
+    expect(getModifierKeyPositionCodeMap(deviceLayout)).toEqual({
+      shift: {
+        [Layer.Primary]: [2],
+        [Layer.Secondary]: [2],
+        [Layer.Tertiary]: [2],
+        [Layer.Quaternary]: [3],
+      },
+      altGraph: {
+        [Layer.Primary]: [],
+        [Layer.Secondary]: [],
+        [Layer.Tertiary]: [],
+        [Layer.Quaternary]: [1],
+      },
     });
   });
 });
