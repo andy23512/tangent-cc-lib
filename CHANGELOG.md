@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.0.57](https://github.com/andy23512/tangent-cc-lib/releases/tag/0.0.57)
+
+- add Japanese key names
+- fix error in key names
+- update dependencies
+
 ## [0.0.56](https://github.com/andy23512/tangent-cc-lib/releases/tag/0.0.56)
 
 - handle highlight logic for layer lock condition
