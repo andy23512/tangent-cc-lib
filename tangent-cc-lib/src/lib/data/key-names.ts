@@ -128,7 +128,7 @@ export const NON_WSK_CODE_2_KEY_NAMES_MAP: Record<NonWSKCode, string[]> = {
   NumpadAdd: [
     'numpad add',
     'numpad plus',
-    'number +',
+    'numpad +',
     'keypad add',
     'keypad plus',
     'keypad +',
@@ -274,7 +274,7 @@ export const NON_KEY_ACTION_NAME_2_KEY_NAMES_MAP: Record<
   MouseMoveLeft: ['mouse move left', '滑鼠向左移動'],
   MouseMoveDown: ['mouse move down', '滑鼠向下移動'],
   MouseMoveUp: ['mouse move up', '滑鼠向上移動'],
-  Dup: ['dup', 'duplicate', 'repeat last note', '重覆上一個鍵'],
+  Dup: ['dup', 'duplicate', 'repeat last note', '重複上一個鍵'],
   GTM: ['toggle GTM', 'toggle generative text menu', '切換生成文字選單'],
   Impulse: [
     'toggle impulse',
