@@ -1,5 +1,7 @@
 # Tangent CC Lib
 
+[![CI](https://github.com/andy23512/tangent-cc-lib/actions/workflows/ci.yml/badge.svg)](https://github.com/andy23512/tangent-cc-lib/actions/workflows/ci.yml)
+
 [NPM](https://npmjs.org/package/tangent-cc-lib)
 
 A shared TypeScript library that collects reusable data models, datasets, and utilities across Tangent's CharaChorder side projects.
