@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { CharaChorderDevice } from '../data/charachorder-device.js';
 
 const mockRequestPort = vi.fn();
 const mockGetPorts = vi.fn();
@@ -132,8 +133,8 @@ describe('SerialPortHandler', () => {
       // fallback, letting us inspect the filter behaviour via the path that
       // ends up calling requestPort after finding >1 viable port.
       // Instead, use a single-entry map so exactly one match returns directly.
-      const singleDevicePorts = new Map([
-        ['ONE M0', { usbProductId: 32783, usbVendorId: 9114 }],
+      const singleDevicePorts = new Map<CharaChorderDevice, SerialPortFilter>([
+        ['ONE M0' as CharaChorderDevice, { usbProductId: 32783, usbVendorId: 9114 }],
       ]);
       const handlerSingle = new SerialPortHandler(true, singleDevicePorts);
       const result = await handlerSingle.getPort();
@@ -174,8 +175,8 @@ describe('SerialPortHandler', () => {
       const customPort = makePort(0xaaaa, 0xbbbb);
       mockGetPorts.mockResolvedValue([customPort]);
 
-      const customPorts = new Map([
-        ['Custom', { usbProductId: 0xbbbb, usbVendorId: 0xaaaa }],
+      const customPorts = new Map<CharaChorderDevice, SerialPortFilter>([
+        ['Custom' as CharaChorderDevice, { usbProductId: 0xbbbb, usbVendorId: 0xaaaa }],
       ]);
       const handler = new SerialPortHandler(true, customPorts);
       const result = await handler.getPort();

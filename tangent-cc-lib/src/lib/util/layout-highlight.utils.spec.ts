@@ -1,3 +1,4 @@
+import type { Layer as LayerType } from '../model/device-layout.models.js';
 describe('getHighlightKeyCombinationFromKeyCombinations', () => {
   const highlightSetting = {
     shiftAndNumShiftLayer: {
@@ -38,7 +39,7 @@ describe('getHighlightKeyCombinationFromKeyCombinations', () => {
   ) =>
     Object.fromEntries(
       Object.values(Layer).map((layer) => [layer, values[layer] ?? []]),
-    );
+    ) as Record<LayerType, number[]>;
 
   it('picks the highest-scoring shift-layer combination on primary layer', async () => {
     const { getHighlightKeyCombinationFromKeyCombinations } = await import(
